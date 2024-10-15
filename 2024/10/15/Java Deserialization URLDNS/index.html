@@ -161,7 +161,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2024-10-15 20:54:23
+          2024-10-15 20:56:56
         </span>
         
               <span class="post-tags">
@@ -200,7 +200,7 @@
 
 <p>在 <code>URLStreamHandler</code> 对象的 <code>hashCode()</code> 中会调用 <code>getHostAddress(u)</code>，进而发起 DNS 请求。</p>
 <p>所以 <code>URLDNS</code> 链的利用链为下图所示：</p>
-<p><img src="https://b1ng0ooo.github.io/images/2024/10/13/Java-Deserialization-URLDNS/1.png"></p>
+<p><img src="https://b1ng0ooo.github.io/images/2024/10/15/Java-Deserialization-URLDNS/1.png"></p>
 <p><strong>总结：</strong>如果一个序列化的 <code>HashMap</code> 对象中存在一个 <code>URL</code> 对象作为键，则在反序列化 <code>HashMap</code> 对象时，会触发 <code>URL</code> 对象的 <code>hashCode()</code> 方法，进而可能触发 DNS 请求。</p>
 <h2 id="2-URLDNS-CHAIN-实现"><a href="#2-URLDNS-CHAIN-实现" class="headerlink" title="2. URLDNS CHAIN 实现"></a>2. URLDNS CHAIN 实现</h2><p><strong><code>URL</code> 的 <code>hashCode</code> 缓存机制</strong>：</p>
 <ul>
@@ -259,7 +259,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2024-10-15 20:54:23
+              2024-10-15 20:56:56
             </span>
             
                   <span class="post-tags">
