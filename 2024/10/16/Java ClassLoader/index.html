@@ -161,7 +161,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2024-10-16 20:29:27
+          2024-10-16 22:32:55
         </span>
         
               <span class="post-tags">
@@ -214,7 +214,88 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Class</span> <span class="variable">personClass</span> <span class="operator">=</span> Person.class;</span><br></pre></td></tr></table></figure>
 </blockquote>
 <hr>
-<h2 id="1-3-类加载的过程"><a href="#1-3-类加载的过程" class="headerlink" title="1.3 类加载的过程"></a>1.3 类加载的过程</h2><p><img src="https://b1ng0ooo.github.io/images/2024/10/16/Java-ClassLoader/1.png"></p>
+<h2 id="1-3-类是如何被加载的？"><a href="#1-3-类是如何被加载的？" class="headerlink" title="1.3 类是如何被加载的？"></a>1.3 类是如何被加载的？</h2><p><img src="https://b1ng0ooo.github.io/images/2024/10/16/Java-ClassLoader/1.png"></p>
+<ol>
+<li><strong>加载</strong></li>
+</ol>
+<p>加载阶段是类加载的第一步，在这个阶段，JVM 通过类加载器将字节码文件（<code>.class</code> 文件）从磁盘或网络读取到内存中，并生成一个 <code>Class</code> 对象，该对象代表类的元信息。查找并加载类的字节码，将类的二进制数据读入 JVM 内存，创建一个 <code>Class</code> 对象，用来封装该类的信息（类名、方法、属性等）。加载完成后，类会被 JVM 标记为“已加载”，但还没有进行后续的初始化和链接。</p>
+<ol start="2">
+<li><strong>连接</strong></li>
+</ol>
+<p>连接阶段将类的字节码转换为 JVM 可以直接使用的格式，并对类的各种符号引用进行解析。连接阶段又细分为三个子阶段：</p>
+<ul>
+<li><p><strong>验证</strong>：在验证阶段，JVM 会检查加载的字节码是否符合 JVM 规范，并确保类文件没有被篡改或破坏，保证字节码的安全性和合法性。如果验证失败，类的加载会被终止，并抛出 <code>VerifyError</code> 等异常。</p>
+</li>
+<li><p><strong>准备</strong>：准备阶段为类的<strong>静态变量</strong>分配内存，并将其初始化为<strong>默认值</strong>，而不是程序中定义的值。</p>
+</li>
+<li><p><strong>解析</strong>：解析阶段是将类的常量池中的符号引用（如方法、字段名等）替换为直接引用（内存地址）。符号引用是编译期生成的，而直接引用是在类加载完成后通过查找相关对象在内存中的地址得到的。</p>
+</li>
+</ul>
+<ol start="3">
+<li><strong>初始化</strong></li>
+</ol>
+<p>初始化阶段是类加载的最后一步。在这个阶段，类的静态变量会被赋予程序中定义的初始值，静态代码块也会被执行。这个阶段也是类的<strong>主动使用</strong>阶段，当类的静态字段或静态方法被使用时，类会在此阶段执行。</p>
+<ol start="4">
+<li><strong>使用</strong></li>
+</ol>
+<p>在类完成加载、连接和初始化后，JVM 可以使用该类进行实例化或调用其静态成员、静态方法等。此时，类的所有静态成员和方法都可以正常使用。</p>
+<ol start="5">
+<li><strong>卸载</strong></li>
+</ol>
+<p>当一个类不再被使用且没有被引用时，JVM 会通过垃圾回收机制将其从内存中卸载。类的卸载是由 JVM 自动完成的，一般不会手动触发。类的卸载过程释放类加载器和类的 <code>Class</code> 对象所占用的内存。</p>
+<hr>
+<h2 id="1-4-类加载器"><a href="#1-4-类加载器" class="headerlink" title="1.4 类加载器"></a>1.4 类加载器</h2><p><strong>类加载器</strong>是 Java 用来动态加载 <code>.class</code> 文件的组件，它负责从文件系统、网络等不同来源中加载类的字节码，并将它们转换为 JVM 可以使用的 <code>Class</code> 对象。每个类加载器都是 <code>ClassLoader</code> 类的一个实例，Java 提供了不同类型的类加载器用于加载不同的类。</p>
+<ol>
+<li><strong>启动类加载器（<code>Bootstrap ClassLoader</code>）</strong></li>
+</ol>
+<p>启动类加载器是最顶层的类加载器，由 C++ 语言实现，负责加载 Java 核心类库（如 <code>rt.jar</code>）中的类，如 <code>java.lang.String</code>、<code>java.util</code> 等。启动类加载器无法通过 Java 代码直接访问。</p>
+<ol start="2">
+<li><strong>扩展类加载器（<code>Extension ClassLoader</code>）</strong></li>
+</ol>
+<p>扩展类加载器负责加载 JRE 的扩展类库，通常是 <code>jre/lib/ext</code> 目录下的类。扩展类加载器是由 Java 实现的，可以通过 <code>ClassLoader</code> 类的 <code>getParent()</code> 方法获取。</p>
+<ol start="3">
+<li><strong>应用类加载器（<code>Application ClassLoader</code>）</strong></li>
+</ol>
+<p>应用类加载器负责加载应用程序类路径下的类（通常是 <code>classpath</code> 下的类），这是 Java 程序中最常用的类加载器。当运行一个 Java 程序时，大多数应用类都是由该类加载器加载的。</p>
+<ol start="4">
+<li><strong>自定义类加载器（<code>Custom ClassLoader</code>）</strong></li>
+</ol>
+<p>Java 允许开发者创建自定义的类加载器，通过继承 <code>ClassLoader</code> 类并覆盖 <code>findClass()</code> 方法，可以定制类的加载过程。</p>
+<hr>
+<h2 id="1-5-双亲委派机制"><a href="#1-5-双亲委派机制" class="headerlink" title="1.5 双亲委派机制"></a>1.5 双亲委派机制</h2><p><strong>双亲委派机制</strong>是类加载器加载类时的一种约定，即当一个类加载器收到类加载请求时，它会先将请求委派给它的父类加载器进行加载，只有当父类加载器无法加载该类时，子加载器才会尝试自己加载。这种机制确保了核心类库（如 <code>java.lang.Object</code> 等）不会被自定义的类加载器重复加载或覆盖，从而<strong>确保 Java 核心类库的安全性和一致性，防止核心类库被恶意篡改或被覆盖</strong>。</p>
+<p><strong>双亲委派机制的工作流程</strong>：</p>
+<ol>
+<li>类加载器收到类加载请求后，先将该请求委派给父类加载器。</li>
+<li>如果父类加载器能够成功加载该类，则直接使用父类加载器加载的类。</li>
+<li>如果父类加载器无法找到该类，子类加载器才会尝试自己加载。</li>
+</ol>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;<span class="type">Person</span> <span class="variable">person</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Person</span>();  <span class="comment">// 加载 Person 类</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>应用类加载器</strong>（Application ClassLoader）首先收到请求加载 <code>Person</code> 类。</p>
+</li>
+<li><p>它会将加载请求委派给它的<strong>父类加载器</strong>——<strong>扩展类加载器</strong>。</p>
+</li>
+<li><p><strong>扩展类加载器</strong>又将请求继续委派给它的父类，即<strong>启动类加载器</strong>。</p>
+</li>
+<li><p><strong>启动类加载器</strong>尝试加载 <code>Person</code> 类，但找不到该类，于是返回控制给<strong>扩展类加载器</strong>，扩展类加载器同样找不到，最终由<strong>应用类加载器</strong>尝试加载，成功加载 <code>Person</code> 类。</p>
+</li>
+</ul>
+<p>这种机制确保了像 <code>java.lang.Object</code> 这样的类永远由启动类加载器加载，即使在自定义的类加载器中存在同名的类，也不会破坏核心类的加载。</p>
+</blockquote>
+<h2 id="1-6-为什么需要双亲委派机制？"><a href="#1-6-为什么需要双亲委派机制？" class="headerlink" title="1.6 为什么需要双亲委派机制？"></a>1.6 为什么需要双亲委派机制？</h2><p>双亲委派机制的主要目的是<strong>确保 Java 核心类库的安全性和一致性，防止核心类库被恶意篡改或被覆盖。</strong></p>
+<ul>
+<li><p><strong>避免重复加载</strong>：通过双亲委派机制，确保 <code>java.lang.Object</code> 等核心类库只会被<strong>启动类加载器</strong>加载一次，不会因为应用程序中的自定义类加载器而重复加载或覆盖。</p>
+</li>
+<li><p><strong>防止安全漏洞</strong>：如果没有双亲委派机制，用户可以在自定义类加载器中定义与核心类库同名的类，可能会导致核心类库被错误地加载，从而引发安全问题。</p>
+</li>
+</ul>
+<p>假设定义了一个与核心类库同名的类 <code>java.lang.String</code>，并通过自定义类加载器加载：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.lang;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">String</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">String</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;我是假的 String 类&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果没有双亲委派机制，程序可能会加载这个自定义的 <code>String</code> 类，导致程序行为异常。双亲委派机制确保了系统核心类库（如 <code>java.lang.String</code>）总是优先由父类加载器加载，从而避免了这种情况的发生。</p>
+<hr>
 
       </div>
       
@@ -230,7 +311,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2024-10-16 20:29:27
+              2024-10-16 22:32:55
             </span>
             
                   <span class="post-tags">
@@ -265,7 +346,7 @@
     <div class="title">Contents</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E8%A7%A3%E8%AF%BB"><span class="toc-text">1. 解读</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E7%B1%BB%E5%8A%A0%E8%BD%BD%EF%BC%9F"><span class="toc-text">1.1 什么是类加载？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BC%9A%E5%8F%91%E7%94%9F%E7%B1%BB%E5%8A%A0%E8%BD%BD%EF%BC%9F"><span class="toc-text">1.2 什么时候会发生类加载？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-text">1.3 类加载的过程</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E8%A7%A3%E8%AF%BB"><span class="toc-text">1. 解读</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E7%B1%BB%E5%8A%A0%E8%BD%BD%EF%BC%9F"><span class="toc-text">1.1 什么是类加载？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BC%9A%E5%8F%91%E7%94%9F%E7%B1%BB%E5%8A%A0%E8%BD%BD%EF%BC%9F"><span class="toc-text">1.2 什么时候会发生类加载？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E7%B1%BB%E6%98%AF%E5%A6%82%E4%BD%95%E8%A2%AB%E5%8A%A0%E8%BD%BD%E7%9A%84%EF%BC%9F"><span class="toc-text">1.3 类是如何被加载的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-text">1.4 类加载器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6"><span class="toc-text">1.5 双亲委派机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-6-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="toc-text">1.6 为什么需要双亲委派机制？</span></a></li></ol></li></ol>
       
     </div>
   </div>
