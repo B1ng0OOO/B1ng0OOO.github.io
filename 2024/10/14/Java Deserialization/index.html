@@ -161,7 +161,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2024-10-15 17:40:29
+          2024-10-16 14:13:37
         </span>
         
               <span class="post-tags">
@@ -183,7 +183,8 @@
           
       </div>
       <div class="markdown-body">
-        <h1 id="1-序列化和反序列化的区别"><a href="#1-序列化和反序列化的区别" class="headerlink" title="1. 序列化和反序列化的区别"></a>1. 序列化和反序列化的区别</h1><h2 id="1-1-序列化"><a href="#1-1-序列化" class="headerlink" title="1.1 序列化"></a>1.1 序列化</h2><h3 id="1-1-1-定义"><a href="#1-1-1-定义" class="headerlink" title="1.1.1 定义"></a>1.1.1 定义</h3><p><strong>Serialization（序列化）是指将数据结构或对象状态转换成可以存储或传输的格式（字节序列）的过程。</strong>这个格式通常是和平台无关的，比如 JSON，XML，二进制格式等，以便可以在不同的系统或环境中进行交换。序列化后的数据可以存储在文件中，或者通过网络发送给其他系统。</p>
+        <p>反序列化漏洞产生原因：当反序列化通过 <code>ObjectInputStream</code> 恢复对象时，JVM 会首先根据字节流创建对象，然后调用 <code>readObject()</code> 方法。<code>readObject()</code> 中的代码会立即自动运行，这就给予了攻击者在服务器上运行代码的能力。如果反序列化的数据是来自不受信任的来源，那么攻击者可以通过构造恶意的序列化数据来触发 <code>readObject()</code> 方法中的恶意逻辑。</p>
+<h1 id="1-序列化和反序列化的区别"><a href="#1-序列化和反序列化的区别" class="headerlink" title="1. 序列化和反序列化的区别"></a>1. 序列化和反序列化的区别</h1><h2 id="1-1-序列化"><a href="#1-1-序列化" class="headerlink" title="1.1 序列化"></a>1.1 序列化</h2><h3 id="1-1-1-定义"><a href="#1-1-1-定义" class="headerlink" title="1.1.1 定义"></a>1.1.1 定义</h3><p><strong>Serialization（序列化）是指将数据结构或对象状态转换成可以存储或传输的格式（反序列化列）的过程。</strong>这个格式通常是和平台无关的，比如 JSON，XML，二进制格式等，以便可以在不同的系统或环境中进行交换。序列化后的数据可以存储在文件中，或者通过网络发送给其他系统。</p>
 <h3 id="1-1-2-作用"><a href="#1-1-2-作用" class="headerlink" title="1.1.2 作用"></a>1.1.2 作用</h3><ul>
 <li><strong>数据持久化：</strong>序列化可以将对象转换为字节流，然后将其存储在文件或数据库中，以便在程序关闭或系统重启后能够重新加载这些数据。</li>
 <li><strong>网络传输：</strong>序列化使对象能够通过网络在不同的 JVM（Java 虚拟机）之间传输。通过序列化，可以将对象转换为字节流并发送到远程系统，接收方可以通过反序列化恢复原始对象。</li>
@@ -441,7 +442,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2024-10-15 17:40:29
+              2024-10-16 14:13:37
             </span>
             
                   <span class="post-tags">
