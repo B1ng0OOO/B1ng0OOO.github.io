@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="John Doe" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Java I/O Stream 
+      
+      
+      |
+    
+     B1ng0OOO&#39;s Blog
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon2.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">B1ng0OOO</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">Friends</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Java I/O Stream</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2024-10-15 17:40:41
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Java/" title="Java">
+                    #Java
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="1-I-O流"><a href="#1-I-O流" class="headerlink" title="1. I&#x2F;O流"></a>1. I&#x2F;O流</h1><p>在 Java 中，<strong>I&#x2F;O 流（Input&#x2F;Output Streams）</strong> 是用于处理数据读写的基础工具之一。无论是从文件中读取数据、向网络发送请求，还是从控制台获取输入，I&#x2F;O 流都是 Java 程序与外部数据源进行交互的核心方式。</p>
+<hr>
+<h2 id="1-1-I-O-流分类"><a href="#1-1-I-O-流分类" class="headerlink" title="1.1 I&#x2F;O 流分类"></a>1.1 I&#x2F;O 流分类</h2><p>根据处理的数据单位不同分为：<strong>字节流</strong> 与 <strong>字符流</strong></p>
+<p><strong>字节流用于处理二进制数据，即以字节为单位读写数据。</strong>它适用于处理任何类型的数据，包括文本、图像、音频、视频等文件，尤其是当我们需要处理非文本文件时（如图像、音频、视频等），字节流是首选。Java 中的字节流类都继承自 <code>InputStream</code> 和 <code>OutputStream</code> 类。</p>
+<p><strong>主要字节流类：</strong></p>
+<ul>
+<li><code>InputStream</code>：字节输入流的基类，用于从源读取字节数据。</li>
+<li><code>OutputStream</code>：字节输出流的基类，用于将字节数据写入目的地。</li>
+</ul>
+<p><strong>字节流分类：</strong></p>
+<ul>
+<li>输入字节流：<ul>
+<li><code>FileInputStream</code>：从文件中读取字节数据。</li>
+<li><code>ByteArrayInputStream</code>：从字节数组中读取字节数据。</li>
+<li><code>BufferedInputStream</code>：为输入流提供缓冲，提高效率。</li>
+</ul>
+</li>
+<li>输出字节流：<ul>
+<li><code>FileOutputStream</code>：将字节数据写入文件。</li>
+<li><code>ByteArrayOutputStream</code>：将字节数据写入字节数组。</li>
+<li><code>BufferedOutputStream</code>：为输出流提供缓冲，提高效率。</li>
+</ul>
+</li>
+</ul>
+<p><strong>字符流用于处理文本数据，即以字符为单位读写数据。</strong>字符流能够自动处理字符编码问题（如 UTF-8、UTF-16 等），适用于读取和写入文本文件。字符流通过内部的缓冲机制，将多个字节组成字符来进行操作。Java 中的字符流类都继承自 <code>Reader</code> 和 <code>Writer</code> 类。</p>
+<p><strong>主要字符流类：</strong></p>
+<ul>
+<li><code>Reader</code>：字符输入流的基类，用于从源读取字符数据。</li>
+<li><code>Writer</code>：字符输出流的基类，用于将字符数据写入目的地。</li>
+</ul>
+<p><strong>字符流分类：</strong></p>
+<ul>
+<li><strong>输入字符流</strong>：<ul>
+<li><code>FileReader</code>：从文件中读取字符数据。</li>
+<li><code>BufferedReader</code>：为字符输入流提供缓冲，提高效率，同时支持按行读取。</li>
+<li><code>InputStreamReader</code>：将字节流转换为字符流，常用于处理编码转换。</li>
+</ul>
+</li>
+<li><strong>输出字符流</strong>：<ul>
+<li><code>FileWriter</code>：将字符数据写入文件。</li>
+<li><code>BufferedWriter</code>：为字符输出流提供缓冲，提高效率。</li>
+<li><code>OutputStreamWriter</code>：将字符流转换为字节流，常用于处理编码转换。</li>
+</ul>
+</li>
+</ul>
+<p><strong>字节流与字符流的区别</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">比较点</th>
+<th align="left">字节流（Byte Stream）</th>
+<th align="left">字符流（Character Stream）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">数据处理单位</td>
+<td align="left">以<strong>字节</strong>为单位（8 位）</td>
+<td align="left">以<strong>字符</strong>为单位（16 位）</td>
+</tr>
+<tr>
+<td align="left">适用场景</td>
+<td align="left">处理<strong>二进制数据</strong>，如图像、音频、视频等</td>
+<td align="left">处理<strong>文本数据</strong>，如文本文件、字符数据等</td>
+</tr>
+<tr>
+<td align="left">基类</td>
+<td align="left">InputStream 和 OutputStream</td>
+<td align="left">Reader 和 Writer</td>
+</tr>
+<tr>
+<td align="left">常见类</td>
+<td align="left">FileInputStream、FileOutputStream</td>
+<td align="left">FileReader、FileWriter</td>
+</tr>
+<tr>
+<td align="left">编码处理</td>
+<td align="left">不处理字符编码问题</td>
+<td align="left">自动处理字符编码问题</td>
+</tr>
+<tr>
+<td align="left">常用场景</td>
+<td align="left">处理非文本文件，如图片、音频、视频</td>
+<td align="left">处理文本文件，如 <code>.txt</code> 文件</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="1-2-FIS-FOS-操作"><a href="#1-2-FIS-FOS-操作" class="headerlink" title="1.2 FIS&#x2F;FOS 操作"></a>1.2 FIS&#x2F;FOS 操作</h2><h3 id="1-2-1-read"><a href="#1-2-1-read" class="headerlink" title="1.2.1 read()"></a>1.2.1 read()</h3><p><strong>功能</strong>：<code>read()</code> 方法用于从输入流中读取一个字节（8 位），返回值是一个整数。</p>
+<p><strong>返回值</strong>：</p>
+<ul>
+<li>返回下一个字节的数据，范围是 0 到 255（对应的 int 值），可以转换为字符。</li>
+<li>如果到达文件末尾（EOF），则返回 -1。</li>
+</ul>
+<p><strong>阻塞</strong>：如果没有可用的输入，<code>read()</code> 方法将阻塞，直到有数据可读或发生 I&#x2F;O 错误。</p>
+<p><strong>抛出异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FISReadDemo01</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        readFile(<span class="string">&quot;src/test.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">readFile</span><span class="params">(String fileName)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileInputStream</span> <span class="variable">fis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(fileName)) &#123;</span><br><span class="line">            <span class="type">int</span> byteData;</span><br><span class="line">            <span class="keyword">while</span> ((byteData = fis.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">                System.out.print((<span class="type">char</span>) byteData);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-2-2-read-byte"><a href="#1-2-2-read-byte" class="headerlink" title="1.2.2 read(byte[])"></a>1.2.2 read(byte[])</h3><p><strong>功能</strong>：<code>read(byte[] b)</code> 方法用于一次性从输入流中读取多个字节并将它们存储到指定的字节数组 <code>b</code> 中。与只读取单个字节的 <code>read()</code> 方法相比， 能够提升读取的效率。</p>
+<p><strong>参数</strong>：<code>byte[] b</code>：一个字节数组，用于存储从输入流中读取的数据。</p>
+<p><strong>返回值</strong>：</p>
+<ul>
+<li>如果读取成功，返回的是存储在字节数组 <code>b</code> 中实际读取到的字节数。</li>
+<li>如果到达文件末尾，返回 <code>-1</code>，表示没有更多的数据可读（EOF）。</li>
+</ul>
+<p><strong>阻塞</strong>：如果没有可用的输入，<code>read(byte[] b)</code> 方法将阻塞，直到有数据可读或发生 I&#x2F;O 错误。</p>
+<p><strong>抛出异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FISReadDemo02</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        readFile(<span class="string">&quot;src/test.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">readFile</span><span class="params">(String fileName)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileInputStream</span> <span class="variable">fis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(fileName)) &#123;</span><br><span class="line">            <span class="type">byte</span>[] buffer = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">8</span>];</span><br><span class="line">            <span class="type">int</span> bytesRead;</span><br><span class="line">            <span class="keyword">while</span> ((bytesRead = fis.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                System.out.write(buffer, <span class="number">0</span>, bytesRead);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-2-3-read-byte-int-int"><a href="#1-2-3-read-byte-int-int" class="headerlink" title="1.2.3 read(byte[], int, int)"></a>1.2.3 read(byte[], int, int)</h3><p><strong>功能</strong>：<code>read(byte[] b, int off, int len)</code> 方法用于从输入流中读取一定数量的字节，并将它们存储在字节数组 <code>b</code> 的指定位置。该方法允许读取数据并放入到数组的特定位置，从而提高读取的灵活性和效率。</p>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>byte[] b</code>：用于存储从输入流中读取的字节数据的目标字节数组。</li>
+<li><code>int off</code>：表示将读取的字节数据存储到数组 <code>b</code> 的起始偏移量（即从 <code>b</code> 的哪个索引位置开始存储读取的数据）。</li>
+<li><code>int len</code>：表示要读取的字节数，即尝试从输入流中读取的最大字节数。</li>
+</ul>
+<p><strong>返回值</strong>：</p>
+<ul>
+<li>返回值为一个整数，表示实际读取到的字节数。如果读取到流的末尾，返回 <code>-1</code>。</li>
+<li>读取的字节数可能小于请求的字节数 <code>len</code>，这取决于当前输入流中可以提供的字节数。</li>
+</ul>
+<p><strong>抛出异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FISReadDemo03</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        readFile(<span class="string">&quot;src/test.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">readFile</span><span class="params">(String fileName)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileInputStream</span> <span class="variable">fis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(fileName)) &#123;</span><br><span class="line">            <span class="type">byte</span>[] buffer = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">8</span>];</span><br><span class="line">            <span class="type">int</span> bytesRead;</span><br><span class="line">            <span class="keyword">while</span> ((bytesRead = fis.read(buffer, <span class="number">0</span>, buffer.length)) != -<span class="number">1</span>)</span><br><span class="line">                System.out.write(buffer, <span class="number">0</span>, bytesRead);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-2-4-write-int"><a href="#1-2-4-write-int" class="headerlink" title="1.2.4 write(int)"></a>1.2.4 write(int)</h3><p><strong>功能</strong>：<code>write(int b)</code> 方法用于将一个字节的数据写入到输出流中。该方法将指定的整数 <code>b</code> 作为字节写入，但实际上只写入该整数的 <strong>低 8 位</strong>，即 <code>b</code> 的最低一个字节。</p>
+<p><strong>参数</strong>：<code>int b</code>：要写入的字节数据。</p>
+<p><strong>抛出异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FOSWriteDemo01</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        writeFile(<span class="string">&quot;src/test1.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">writeFile</span><span class="params">(String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileOutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(filePath)) &#123;</span><br><span class="line">            fos.write(<span class="number">65</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;Write successful!&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-2-5-write-byte"><a href="#1-2-5-write-byte" class="headerlink" title="1.2.5 write(byte[])"></a>1.2.5 write(byte[])</h3><p><strong>功能</strong>：<code>write(byte[] b)</code> 方法用于将一个字节数组中的所有字节写入输出流。该方法能够一次性写入多个字节，和单字节写入方法 <code>write(int b)</code> 相比，能够更高效地写入大量数据。</p>
+<p><strong>参数</strong>：<code>byte[] b</code>：要写入的字节数组。该数组中的所有字节都会被写入到输出流中。</p>
+<p><strong>抛出异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FOSWriteDemo02</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        writeFile(<span class="string">&quot;src/test2.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">writeFile</span><span class="params">(String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileOutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(filePath)) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">content</span> <span class="operator">=</span> <span class="string">&quot;Hello World&quot;</span>;</span><br><span class="line">            fos.write(content.getBytes());</span><br><span class="line">            System.out.println(<span class="string">&quot;Write successful!&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-2-6-wirte-byte-int-int"><a href="#1-2-6-wirte-byte-int-int" class="headerlink" title="1.2.6 wirte(byte[], int, int)"></a>1.2.6 wirte(byte[], int, int)</h3><p><strong>功能</strong>： <code>wirte(byte[] b, int off, int len)</code> 方法用于将字节数组的一部分写入输出流。这个方法能够更加灵活地处理数据，适合于需要从数组的特定位置开始写入或只想写入部分数据的场景。</p>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><p><code>byte[] b</code>：要写入的字节数组。</p>
+</li>
+<li><p><code>int off</code>：指定从数组的哪个位置开始读取数据（偏移量）。</p>
+</li>
+<li><p><code>int len</code>：要写入的字节数，表示从偏移量 <code>off</code> 开始要写入的字节长度。</p>
+</li>
+</ul>
+<p><strong>抛出异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FOSWriteDemo03</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        writeFile(<span class="string">&quot;src/test3.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">writeFile</span><span class="params">(String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileOutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(filePath)) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">content</span> <span class="operator">=</span> <span class="string">&quot;Hello World&quot;</span>;</span><br><span class="line">            fos.write(content.getBytes(), <span class="number">0</span>, content.length());</span><br><span class="line">            System.out.println(<span class="string">&quot;Write successful!&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-2-7-append-data"><a href="#1-2-7-append-data" class="headerlink" title="1.2.7 append data"></a>1.2.7 append data</h3><p>在 Java 中，<strong>追加写入（Append Writing）</strong>通常是指在文件末尾添加数据，而不是覆盖文件中现有的内容。为了实现文件的追加写入，可以使用 <code>FileOutputStream</code> 类的构造方法中的第二个参数，设置为 <code>true</code>，以便在写入时启用追加模式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Append</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">dataToAppend</span> <span class="operator">=</span> <span class="string">&quot;\nAppending this line.&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">filePath</span> <span class="operator">=</span> <span class="string">&quot;src/test.txt&quot;</span>;</span><br><span class="line">        append(filePath, dataToAppend);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">append</span><span class="params">(String filePath, String data)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileOutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(filePath, <span class="literal">true</span>)) &#123;</span><br><span class="line">            fos.write(data.getBytes());</span><br><span class="line">            System.out.println(<span class="string">&quot;Append Successfully!&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-2-8-copy-data"><a href="#1-2-8-copy-data" class="headerlink" title="1.2.8 copy data"></a>1.2.8 copy data</h3><p>在 Java 中进行<strong>数据复制（copy data）</strong>通常涉及将数据从一个流读入（输入流）并写入到另一个流（输出流）。可以使用 <code>FileInputStream</code> 和 <code>FileOutputStream</code> 来进行文件复制操作。这两个类分别用于读取文件和写入文件。为了提高性能，通常使用缓冲流（<code>BufferedInputStream</code> 和 <code>BufferedOutputStream</code>）来减少磁盘 I&#x2F;O 次数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Copy</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sourceFile</span> <span class="operator">=</span> <span class="string">&quot;src/source.txt&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">destinationFile</span> <span class="operator">=</span> <span class="string">&quot;src/destination.txt&quot;</span>;</span><br><span class="line">        copyData(sourceFile, destinationFile);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">copyData</span><span class="params">(String sourceFile, String destinationFile)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">BufferedInputStream</span> <span class="variable">bis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedInputStream</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(sourceFile));</span><br><span class="line">             <span class="type">BufferedOutputStream</span> <span class="variable">bos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedOutputStream</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(destinationFile));)&#123;</span><br><span class="line">            <span class="type">byte</span>[] buffer = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span>];</span><br><span class="line">            <span class="type">int</span> bytesRead;</span><br><span class="line">            <span class="keyword">while</span> ((bytesRead = bis.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                bos.write(buffer, <span class="number">0</span>, bytesRead);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">&quot;Copied &quot;</span> + sourceFile + <span class="string">&quot; to &quot;</span> + destinationFile);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="1-3-FR-RW-操作"><a href="#1-3-FR-RW-操作" class="headerlink" title="1.3 FR&#x2F;RW 操作"></a>1.3 FR&#x2F;RW 操作</h2><h3 id="FileReader-类构造函数分析"><a href="#FileReader-类构造函数分析" class="headerlink" title="FileReader 类构造函数分析"></a><strong><code>FileReader</code> 类构造函数分析</strong></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">FileReader</span><span class="params">(String fileName)</span> <span class="keyword">throws</span> FileNotFoundException &#123;</span><br><span class="line">    <span class="built_in">super</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(fileName));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">FileReader</span><span class="params">(File file)</span> <span class="keyword">throws</span> FileNotFoundException &#123;</span><br><span class="line">    <span class="built_in">super</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(file));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">FileReader</span><span class="params">(FileDescriptor fd)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(fd));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>super()</code> 方法将 <code>FileInputStream</code> 传递给 <code>InputStreamReader</code>，再调用 <code>StreamDecoder</code> 类的 <code>forInputStreamReader()</code> 方法将字节流按照指定的字符编码转换为字符流。</p>
+<blockquote>
+<p><code>forInputStreamReader</code> 是 <code>StreamDecoder</code> 的一个静态工厂方法，用于创建合适的 <code>StreamDecoder</code> 实例。这个方法需要传入字节输入流、用于同步的锁对象和字符编码，并返回一个可以处理字节到字符转换的 <code>StreamDecoder</code>。（这里先暂时不过多介绍）</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">InputStreamReader</span><span class="params">(InputStream in)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(in);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        sd = StreamDecoder.forInputStreamReader(in, <span class="built_in">this</span>, (String)<span class="literal">null</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">InputStreamReader</span><span class="params">(InputStream in, String charsetName)</span></span><br><span class="line">    <span class="keyword">throws</span> UnsupportedEncodingException &#123;</span><br><span class="line">    <span class="built_in">super</span>(in);</span><br><span class="line">    <span class="keyword">if</span> (charsetName == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>(<span class="string">&quot;charsetName&quot;</span>);</span><br><span class="line">    sd = StreamDecoder.forInputStreamReader(in, <span class="built_in">this</span>, charsetName);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">InputStreamReader</span><span class="params">(InputStream in, Charset cs)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(in);</span><br><span class="line">    <span class="keyword">if</span> (cs == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>(<span class="string">&quot;charset&quot;</span>);</span><br><span class="line">    sd = StreamDecoder.forInputStreamReader(in, <span class="built_in">this</span>, cs);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">InputStreamReader</span><span class="params">(InputStream in, CharsetDecoder dec)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(in);</span><br><span class="line">    <span class="keyword">if</span> (dec == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>(<span class="string">&quot;charset decoder&quot;</span>);</span><br><span class="line">    sd = StreamDecoder.forInputStreamReader(in, <span class="built_in">this</span>, dec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>super(new FileInputStream(file))</code>：通过调用 <code>super</code>，将 <code>FileInputStream</code> 传递给 <code>FileReader</code> 的父类 <code>InputStreamReader</code>。</p>
+<p>所以 <code>FileReader</code> 实际上是通过 <code>InputStreamReader</code> 来实现字节到字符的转换：</p>
+<ul>
+<li><code>FileReader</code> 继承了 <code>InputStreamReader</code>，而 <code>InputStreamReader</code> 是字节流到字符流的桥梁。它负责将从 <code>FileInputStream</code> 读取的字节调用 <code>StreamDecoder</code> 类的方法按照指定的字符编码转换为字符。</li>
+<li>这意味着，<code>FileReader</code> 只是一个方便的类，用于简化创建 <code>InputStreamReader</code> 和 <code>FileInputStream</code> 的过程，它默认使用系统的字符集来读取文件。</li>
+</ul>
+<hr>
+<h3 id="FileWriter-类构造函数分析"><a href="#FileWriter-类构造函数分析" class="headerlink" title="FileWriter 类构造函数分析"></a><strong><code>FileWriter</code> 类构造函数分析</strong></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">FileWriter</span><span class="params">(String fileName)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="built_in">super</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(fileName));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">FileWriter</span><span class="params">(String fileName, <span class="type">boolean</span> append)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="built_in">super</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(fileName, append));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">FileWriter</span><span class="params">(File file)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="built_in">super</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(file));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">FileWriter</span><span class="params">(File file, <span class="type">boolean</span> append)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="built_in">super</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(file, append));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">FileWriter</span><span class="params">(FileDescriptor fd)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(fd));</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>super()</code> 方法将 <code>FileOutputStream</code> 传递给 <code>OutputStreamReader</code>，再调用 <code>StreamEncoder</code> 类的 <code>forOutputStreamWriter()</code> 方法将字节流按照指定的字符编码转换为字符流。</p>
+<blockquote>
+<p><code>forOutputStreamWriter</code> 是 <code>StreamEncoder</code> 的一个静态工厂方法，用于创建合适的 <code>StreamEncoder</code> 实例。这个方法需要传入目标输出流和字符编码，并返回一个可以处理字符到字节转换的 <code>StreamEncoder</code>。（这里先暂时不过多介绍）</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">OutputStreamWriter</span><span class="params">(OutputStream out, String charsetName)</span></span><br><span class="line">    <span class="keyword">throws</span> UnsupportedEncodingException &#123;</span><br><span class="line">    <span class="built_in">super</span>(out);</span><br><span class="line">    <span class="keyword">if</span> (charsetName == <span class="literal">null</span>) </span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>(<span class="string">&quot;charsetName&quot;</span>);</span><br><span class="line">    se = StreamEncoder.forOutputStreamWriter(out, <span class="built_in">this</span>, charsetName);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">OutputStreamWriter</span><span class="params">(OutputStream out)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(out);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        se = StreamEncoder.forOutputStreamWriter(out, <span class="built_in">this</span>, (String)<span class="literal">null</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">OutputStreamWriter</span><span class="params">(OutputStream out, Charset cs)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(out);</span><br><span class="line">    <span class="keyword">if</span> (cs == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>(<span class="string">&quot;charset&quot;</span>);</span><br><span class="line">    se = StreamEncoder.forOutputStreamWriter(out, <span class="built_in">this</span>, cs);</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line"><span class="keyword">public</span> <span class="title function_">OutputStreamWriter</span><span class="params">(OutputStream out, CharsetEncoder enc)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(out);</span><br><span class="line">    <span class="keyword">if</span> (enc == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>(<span class="string">&quot;charset encoder&quot;</span>);</span><br><span class="line">    se = StreamEncoder.forOutputStreamWriter(out, <span class="built_in">this</span>, enc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>FileWriter</code> 通过 <code>super(new FileOutputStream(file))</code> 调用父类 <code>OutputStreamWriter</code> 的构造函数，而 <code>OutputStreamWriter</code> 是负责将字符流转换为字节流的类。它将字符编码为字节，并将这些字节通过 <code>FileOutputStream</code> 写入文件。</p>
+<p>所以 <code>FileWriter</code> 实际上是通过 <code>OutputStreamWriter</code> 来实现字符到字节的转换：</p>
+<ul>
+<li><code>FileWriter</code> 继承自 <code>OutputStreamWriter</code>，用于将字符数据写入文件。</li>
+<li><code>FileOutputStream</code> 负责处理底层的字节写入操作，因为文件系统只能存储字节数据。</li>
+<li><code>FileWriter</code> 通过字符流与字节流的桥梁 <code>OutputStreamWriter</code> 来将字符数据转换为字节，然后使用 <code>FileOutputStream</code> 将字节写入文件。</li>
+</ul>
+<hr>
+<h3 id="1-3-1-read-CharBuffer"><a href="#1-3-1-read-CharBuffer" class="headerlink" title="1.3.1 read(CharBuffer)"></a>1.3.1 read(CharBuffer)</h3><p><strong>功能</strong>：<code>read(java.nio.CharBuffer target)</code> 方法用于将字符从文件中读取到 <code>CharBuffer</code> 中。这个方法的工作原理是尽可能多地读取字符，直到缓冲区没有足够的空间为止。读取的字符直接放入 <code>CharBuffer</code> 对象中，缓冲区的当前指针也会随之移动。</p>
+<p><strong>参数</strong>：<code>CharBuffer target</code>：用于存放从文件中读取字符的 <code>CharBuffer</code> 对象。该缓冲区应处于写入模式。</p>
+<p><strong>返回值</strong>：返回实际读取的字符数，或者返回 <code>-1</code>， 表示已到达文件结尾。</p>
+<p><strong>异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FRReadDemo01</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        frRead(<span class="string">&quot;src/test.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">frRead</span><span class="params">(String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileReader</span> <span class="variable">fr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileReader</span>(filePath)) &#123;</span><br><span class="line">            <span class="type">CharBuffer</span> <span class="variable">buffer</span> <span class="operator">=</span> CharBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line">            <span class="type">int</span> <span class="variable">charsRead</span> <span class="operator">=</span> fr.read(buffer);</span><br><span class="line">            <span class="comment">// flip() 方法将缓冲区从写模式切换为读模式</span></span><br><span class="line">            <span class="comment">// limit = position;  // 表示当前有效数据的末尾位置</span></span><br><span class="line">            <span class="comment">// position = 0;  // 表示从缓冲区的开头开始读取</span></span><br><span class="line">            buffer.flip();</span><br><span class="line">            <span class="comment">// hasRemaining() 方法用来判断是否还有剩余数据</span></span><br><span class="line">            <span class="comment">// return position &lt; limit;</span></span><br><span class="line">            <span class="keyword">while</span> (buffer.hasRemaining()) &#123;</span><br><span class="line">                <span class="comment">// get() 方法读取一个元素时，position 会自动加 1，指向下一个要读取的位置</span></span><br><span class="line">                System.out.print((<span class="type">char</span>) buffer.get());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-3-2-read"><a href="#1-3-2-read" class="headerlink" title="1.3.2 read()"></a>1.3.2 read()</h3><p><strong>功能</strong>：<code>read()</code> 方法用于读取单个字符，返回该字符的 <code>int</code> 表示。如果已到达文件结尾，返回 <code>-1</code>。</p>
+<p><strong>返回值</strong>：读取的字符对应的 <code>int</code>，或 <code>-1</code> 表示文件结尾。</p>
+<p><strong>异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FRReadDemo02</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        frRead(<span class="string">&quot;src/test.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">frRead</span><span class="params">(String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileReader</span> <span class="variable">fr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileReader</span>(filePath)) &#123;</span><br><span class="line">            <span class="type">int</span> charRead;</span><br><span class="line">            <span class="keyword">while</span> ((charRead = fr.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">                System.out.print((<span class="type">char</span>) charRead);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-3-3-read-char"><a href="#1-3-3-read-char" class="headerlink" title="1.3.3 read(char[])"></a>1.3.3 read(char[])</h3><p><strong>功能</strong>：将字符读入字符数组 <code>cbuf</code>，最多读取 <code>cbuf.length</code> 个字符。</p>
+<p><strong>参数</strong>：<code>char[] cbuf</code>：目标字符数组，用于存储读取的字符。</p>
+<p><strong>返回值</strong>：返回实际读取的字符数，或者返回 <code>-1</code> 表示已到达文件结尾。</p>
+<p><strong>异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FRReadDemo03</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        frRead(<span class="string">&quot;src/test.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">frRead</span><span class="params">(String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileReader</span> <span class="variable">fr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileReader</span>(filePath)) &#123;</span><br><span class="line">            <span class="type">char</span>[] buffer = <span class="keyword">new</span> <span class="title class_">char</span>[<span class="number">1024</span>];</span><br><span class="line">            <span class="type">int</span> <span class="variable">charsRead</span> <span class="operator">=</span> fr.read(buffer);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> (charsRead != -<span class="number">1</span>) &#123;</span><br><span class="line">                System.out.print(<span class="keyword">new</span> <span class="title class_">String</span>(buffer, <span class="number">0</span>, charsRead));</span><br><span class="line">                charsRead = fr.read(buffer);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-3-4-read-char-int-int"><a href="#1-3-4-read-char-int-int" class="headerlink" title="1.3.4 read(char[], int, int)"></a>1.3.4 read(char[], int, int)</h3><p><strong>功能</strong>：将字符读入到字符数组 <code>cbuf</code> 中，从偏移量 <code>off</code> 开始，最多读取 <code>len</code> 个字符。</p>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>char[] cbuf</code>：目标字符数组，用于存储读取的字符。</li>
+<li><code>int off</code>：从 <code>cbuf</code> 中开始存储字符的偏移量。</li>
+<li><code>int len</code>：要读取的字符最大数量。</li>
+</ul>
+<p><strong>返回值</strong>：返回实际读取的字符数，或者返回 <code>-1</code> 表示已到达文件结尾。</p>
+<p><strong>异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FRReadDemo04</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        frRead(<span class="string">&quot;src/test.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">frRead</span><span class="params">(String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileReader</span> <span class="variable">fr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileReader</span>(filePath)) &#123;</span><br><span class="line">            <span class="type">char</span>[] buffer = <span class="keyword">new</span> <span class="title class_">char</span>[<span class="number">8</span>];</span><br><span class="line">            <span class="type">int</span> <span class="variable">charsRead</span> <span class="operator">=</span> fr.read(buffer, <span class="number">0</span>, buffer.length);</span><br><span class="line">            <span class="keyword">while</span> (charsRead != -<span class="number">1</span>) &#123;</span><br><span class="line">                System.out.print(<span class="keyword">new</span> <span class="title class_">String</span>(buffer, <span class="number">0</span>, charsRead));</span><br><span class="line">                charsRead = fr.read(buffer, <span class="number">0</span>, buffer.length);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-3-5-write-int"><a href="#1-3-5-write-int" class="headerlink" title="1.3.5 write(int)"></a>1.3.5 write(int)</h3><p><strong>功能</strong>：<code>FileWriter.write(int)</code> 方法用于将单个字符写入到文件中。</p>
+<p><strong>参数</strong>：<code>int c</code>：要写入的字符。虽然参数类型是 <code>int</code>，但只有该整数的低 16 位（即字符的 Unicode 编码值）会被写入文件。</p>
+<p><strong>异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FWWriteDemo01</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        fwWrite(<span class="string">&quot;src/output.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fwWrite</span><span class="params">(String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileWriter</span> <span class="variable">fw</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileWriter</span>(filePath)) &#123;</span><br><span class="line">            fw.write(<span class="number">65</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;Wrote successfully!&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-3-6-write-char"><a href="#1-3-6-write-char" class="headerlink" title="1.3.6 write(char[])"></a>1.3.6 write(char[])</h3><p><strong>功能</strong>：<code>FileWriter.write(char[])</code> 方法用于将字符数组中的字符写入文件。该方法会将整个字符数组的内容一次性写入到文件中。</p>
+<p><strong>参数</strong>：<code>char[] cbuf</code>：要写入的字符数组。</p>
+<p><strong>异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FWWriteDemo02</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        fwWrite(<span class="string">&quot;src/output.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fwWrite</span><span class="params">(String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileWriter</span> <span class="variable">fw</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileWriter</span>(filePath)) &#123;</span><br><span class="line">            <span class="type">char</span>[] chars = &#123;<span class="string">&#x27;H&#x27;</span>, <span class="string">&#x27;e&#x27;</span>, <span class="string">&#x27;l&#x27;</span>, <span class="string">&#x27;l&#x27;</span>, <span class="string">&#x27;o&#x27;</span>, <span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;W&#x27;</span>, <span class="string">&#x27;o&#x27;</span>, <span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;l&#x27;</span>, <span class="string">&#x27;d&#x27;</span>&#125;;</span><br><span class="line">            fw.write(chars);</span><br><span class="line">            System.out.println(<span class="string">&quot;Wrote successfully!&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-3-7-write-char-int-int"><a href="#1-3-7-write-char-int-int" class="headerlink" title="1.3.7 write(char[], int, int)"></a>1.3.7 write(char[], int, int)</h3><p><strong>功能</strong>：<code>FileWriter.write(char[], int, int)</code> 方法用于将指定字符数组中的一部分字符写入文件。该方法允许选择从字符数组的哪个位置开始写入，以及最多写入多少个字符。</p>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>char[] cbuf</code>：要写入的字符数组。</li>
+<li><code>int off</code>：字符数组中开始写入的起始位置（偏移量）。</li>
+<li><code>int len</code>：要写入的字符个数，从偏移量 <code>off</code> 开始算起。</li>
+</ul>
+<p><strong>异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FWWriteDemo03</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        fwWrite(<span class="string">&quot;src/output.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fwWrite</span><span class="params">(String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileWriter</span> <span class="variable">fw</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileWriter</span>(filePath)) &#123;</span><br><span class="line">            <span class="type">char</span>[] chars = &#123;<span class="string">&#x27;H&#x27;</span>, <span class="string">&#x27;e&#x27;</span>, <span class="string">&#x27;l&#x27;</span>, <span class="string">&#x27;l&#x27;</span>, <span class="string">&#x27;o&#x27;</span>, <span class="string">&#x27; &#x27;</span>, <span class="string">&#x27;W&#x27;</span>, <span class="string">&#x27;o&#x27;</span>, <span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;l&#x27;</span>, <span class="string">&#x27;d&#x27;</span>&#125;;</span><br><span class="line">            fw.write(chars, <span class="number">6</span>, chars.length - <span class="number">6</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;Wrote successfully!&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h3 id="1-3-8-write-String"><a href="#1-3-8-write-String" class="headerlink" title="1.3.8 write(String)"></a>1.3.8 write(String)</h3><p><strong>功能</strong>：<code>FileWriter.write(String)</code> 方法用于将指定的字符串写入文件。该方法会将字符串中的所有字符写入到文件中。</p>
+<p><strong>参数</strong>：<code>String str</code>：要写入文件的字符串。该字符串中的所有字符将被写入到文件中。</p>
+<p><strong>异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FWWriteDemo04</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        fwWrite(<span class="string">&quot;src/output.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fwWrite</span><span class="params">(String filename)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileWriter</span> <span class="variable">fw</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileWriter</span>(filename)) &#123;</span><br><span class="line">            fw.write(<span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;Wrote successfully!&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="1-3-9-write-String-int-int"><a href="#1-3-9-write-String-int-int" class="headerlink" title="1.3.9 write(String, int, int)"></a>1.3.9 write(String, int, int)</h3><p><strong>功能</strong>：<code>FileWriter.write(String, int, int)</code> 方法用于将指定字符串中的一部分字符写入文件。该方法允许指定从字符串的哪个位置开始写入，以及最多写入多少个字符。</p>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>String str</code>：要写入文件的字符串。</li>
+<li><code>int off</code>：字符串中开始写入的起始位置（偏移量）。</li>
+<li><code>int len</code>：要写入的字符个数，从偏移量 <code>off</code> 开始算起。</li>
+</ul>
+<p><strong>异常</strong>：如果发生 I&#x2F;O 错误，将抛出 IOException。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FWWriteDemo05</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        fwWrite(<span class="string">&quot;src/output.txt&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fwWrite</span><span class="params">(String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileWriter</span> <span class="variable">fw</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileWriter</span>(filePath)) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="string">&quot;Keep Hungry! Keep Foolish!&quot;</span>;</span><br><span class="line">            fw.write(str, <span class="number">13</span>, str.length() - <span class="number">13</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;Wrote successfully!&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/10/10/Java%20Memory%20Shell/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2024-10-15 17:40:41
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Java/" title="Java">
+                        #Java
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/10/11/Java%20Reflection/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-I-O%E6%B5%81"><span class="toc-text">1. I&#x2F;O流</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-I-O-%E6%B5%81%E5%88%86%E7%B1%BB"><span class="toc-text">1.1 I&#x2F;O 流分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-FIS-FOS-%E6%93%8D%E4%BD%9C"><span class="toc-text">1.2 FIS&#x2F;FOS 操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-1-read"><span class="toc-text">1.2.1 read()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-2-read-byte"><span class="toc-text">1.2.2 read(byte[])</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-3-read-byte-int-int"><span class="toc-text">1.2.3 read(byte[], int, int)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-4-write-int"><span class="toc-text">1.2.4 write(int)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-5-write-byte"><span class="toc-text">1.2.5 write(byte[])</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-6-wirte-byte-int-int"><span class="toc-text">1.2.6 wirte(byte[], int, int)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-7-append-data"><span class="toc-text">1.2.7 append data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-8-copy-data"><span class="toc-text">1.2.8 copy data</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-FR-RW-%E6%93%8D%E4%BD%9C"><span class="toc-text">1.3 FR&#x2F;RW 操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FileReader-%E7%B1%BB%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90"><span class="toc-text">FileReader 类构造函数分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FileWriter-%E7%B1%BB%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90"><span class="toc-text">FileWriter 类构造函数分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-1-read-CharBuffer"><span class="toc-text">1.3.1 read(CharBuffer)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-2-read"><span class="toc-text">1.3.2 read()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-3-read-char"><span class="toc-text">1.3.3 read(char[])</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-4-read-char-int-int"><span class="toc-text">1.3.4 read(char[], int, int)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-5-write-int"><span class="toc-text">1.3.5 write(int)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-6-write-char"><span class="toc-text">1.3.6 write(char[])</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-7-write-char-int-int"><span class="toc-text">1.3.7 write(char[], int, int)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-8-write-String"><span class="toc-text">1.3.8 write(String)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-9-write-String-int-int"><span class="toc-text">1.3.9 write(String, int, int)</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2024 Oranges</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Java%20I%2FO%20Stream + '&url=' + https%3A%2F%2Fb1ng0ooo.github.io%2F2024%2F10%2F10%2FJava%2520IO%2520Stream%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://b1ng0ooo.github.io/2024/10/10/Java%20IO%20Stream/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

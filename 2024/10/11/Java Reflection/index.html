@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="John Doe" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Java Reflection 
+      
+      
+      |
+    
+     B1ng0OOO&#39;s Blog
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon2.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">B1ng0OOO</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">Friends</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Java Reflection</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2024-10-15 17:40:50
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Java/" title="Java">
+                    #Java
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="1-反射"><a href="#1-反射" class="headerlink" title="1. 反射"></a>1. 反射</h1><h2 id="1-1-什么是反射？"><a href="#1-1-什么是反射？" class="headerlink" title="1.1 什么是反射？"></a>1.1 什么是反射？</h2><p>Java 反射是一种动态获取类、方法、属性等信息并调用的机制。通过反射，程序可以在运行时获取对象的类型信息，并动态调用类的方法或访问属性，哪怕这些类或方法在编译时并不知道。</p>
+<p>每个类在 Java 虚拟机中都由一个 <code>Class</code> 对象表示。当 Java 程序加载一个类时，虚拟机会为这个类创建一个 <code>Class </code>对象，这个 <code>Class</code> 对象就保存了类的所有信息。通过 <code>Class</code> 对象，可以获取类的构造函数、成员变量和方法，甚至可以访问私有的字段和方法。</p>
+<hr>
+<h2 id="1-2-常用的反射相关类和方法"><a href="#1-2-常用的反射相关类和方法" class="headerlink" title="1.2 常用的反射相关类和方法"></a>1.2 常用的反射相关类和方法</h2><p><strong>使用 Java 反射，不需要包含任何特殊的 jar 包、任何特殊的配置或 Maven 依赖项。JDK 内置了一组类在 <a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/package-summary.html">java.lang.reflect</a> 包中。</strong></p>
+<ul>
+<li><strong><code>java.lang.Class</code> 类</strong>：表示类或接口的对象，可以通过 <code>Class.forName()</code>、<code>对象.getClass()</code> 等方法获取 <code>Class</code> 对象。</li>
+<li><strong><code>java.lang.reflect.Method</code> 类</strong>：表示类中的方法，可以通过 <code>Method.invoke()</code> 动态调用方法。</li>
+<li><strong><code>java.lang.reflect.Field</code> 类</strong>：表示类中的字段，可以通过 <code>Field.get()</code> 和 <code>Field.set()</code> 访问和修改字段。</li>
+<li><strong><code>java.lang.reflect.Constructor</code> 类</strong>：表示类的构造函数，可以通过 <code>Constructor.newInstance()</code> 创建新的类实例。</li>
+</ul>
+<hr>
+<h1 id="2-Class-类"><a href="#2-Class-类" class="headerlink" title="2. Class 类"></a>2. Class 类</h1><p><code>Class</code> 类在 Java 中是反射机制的核心部分，它表示的是类的运行时结构。每当一个 Java 程序加载类时，JVM 都会为这个类生成一个唯一的 <code>Class</code> 对象，代表这个类的结构和行为信息。通过 <code>Class</code> 类，我们可以在运行时获取类的相关信息，并且对类的实例进行操作。</p>
+<p><strong>可以获取 <code>Class</code> 对象的类</strong>：</p>
+<ul>
+<li><strong>普通类</strong>（包括 <code>public</code>、<code>protected</code>、<code>private</code> 和 <code>default</code> 访问权限的类）</li>
+<li><strong>接口</strong>（Interface）</li>
+<li><strong>数组类型</strong></li>
+<li><strong>基本类型（Primitive Types）</strong> 基本类型本身也有对应的 <code>Class</code> 对象</li>
+<li><strong>枚举（Enum）</strong></li>
+<li><strong>注解类型（Annotation）</strong></li>
+<li><strong>泛型类（Generic Types）</strong> 虽然在运行时 Java 的泛型会进行类型擦除，但仍可以获取泛型类的 <code>Class</code> 对象。</li>
+</ul>
+<hr>
+<p><code>Class</code> 对象是反射的基础，所有反射操作都需要通过 <code>Class</code> 对象进行。以下是常见的几种方式：</p>
+<ul>
+<li><strong>通过 <code>Class.forName()</code> 方法</strong></li>
+</ul>
+<p>使用 <code>Class.forName()</code> 是动态加载类的方式，通常用于在运行时加载类，适合在名称字符串已知但类未编译时使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; clazz = Class.forName(<span class="string">&quot;com.example.MyClass&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>通过对象的 <code>getClass()</code> 方法</strong></li>
+</ul>
+<p>通过实例化对象调用 <code>getClass()</code> 方法，获取其运行时类型对应的 <code>Class</code> 对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">MyClass</span> <span class="variable">obj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyClass</span>();</span><br><span class="line">Class&lt;?&gt; clazz = obj.getClass();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>通过类的 <code>.class</code> 属性</strong></li>
+</ul>
+<p>这种方式是静态的，编译时已经知道类名，直接使用类的 <code>.class</code> 属性获取 <code>Class</code> 对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;MyClass&gt; clazz = MyClass.class;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-1-forName-String"><a href="#2-1-forName-String" class="headerlink" title="2.1 forName(String)"></a>2.1 forName(String)</h2><p><strong>作用</strong>：根据指定的类的全限定名（包括包名）加载对应的 <code>Class</code> 对象。</p>
+<p><strong>参数</strong>：<code>className</code>：<code>String</code> 类型，表示类的全限定名（包括包名）</p>
+<p><strong>返回值</strong>：<code>Class&lt;?&gt;</code> 对象，表示类的运行时类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; clazz = Class.forName(<span class="string">&quot;com.b1ng0ooo.reflection.MyClass&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-2-newInstance"><a href="#2-2-newInstance" class="headerlink" title="2.2 newInstance()"></a>2.2 newInstance()</h2><p><strong>作用</strong>：调用类的无参构造函数，创建该类的实例。</p>
+<p><strong>返回值</strong>：<code>Object</code> 对象，表示类的实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> clazz.newInstance();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-3-getName"><a href="#2-3-getName" class="headerlink" title="2.3 getName()"></a>2.3 getName()</h2><p><strong>作用</strong>：返回此 <code>Class</code> 对象表示的实体的名称（全限定名）。</p>
+<p><strong>返回值</strong>：<code>String</code>，类的全限定名。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">className</span> <span class="operator">=</span> clazz.getName();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-4-getInterfaces"><a href="#2-4-getInterfaces" class="headerlink" title="2.4 getInterfaces()"></a>2.4 getInterfaces()</h2><p><strong>作用</strong>：获取该 <code>Class</code> 对象表示的类或接口所实现的接口数组。</p>
+<p><strong>返回值</strong>：<code>Class&lt;?&gt;[]</code>，包含类实现的所有接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt;[] interfaces = clazz.getInterfaces();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-5-getSuperClass"><a href="#2-5-getSuperClass" class="headerlink" title="2.5 getSuperClass()"></a>2.5 getSuperClass()</h2><p><strong>作用</strong>：返回此 <code>Class</code> 对象表示的类的父类。</p>
+<p><strong>返回值</strong>：<code>Class&lt;?&gt;</code>，类的父类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; superClass = clazz.getSuperclass();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-6-getField-String"><a href="#2-6-getField-String" class="headerlink" title="2.6 getField(String)"></a>2.6 getField(String)</h2><p><strong>作用</strong>：获取当前类及其父类中指定的 <code>public</code> 字段。</p>
+<p><strong>参数</strong>：<code>name</code>：<code>String</code>，表示要获取的字段名称。</p>
+<p><strong>返回值</strong>：<code>Field</code> 对象，表示获取到的 <code>public</code> 字段。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Field[] fields = clazz.getFields();</span><br><span class="line"><span class="keyword">for</span> (Field field : fields) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Public Field: &quot;</span> + field.getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-7-getFields"><a href="#2-7-getFields" class="headerlink" title="2.7 getFields()"></a>2.7 getFields()</h2><p><strong>作用</strong>：返回当前类及其父类中所有的 <code>public</code> 字段。</p>
+<p><strong>返回值</strong>：<code>Field[]</code> 数组，包含所有的 <code>public</code> 字段。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Field[] fields = clazz.getFields();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-8-getDeclaredField-String"><a href="#2-8-getDeclaredField-String" class="headerlink" title="2.8 getDeclaredField(String)"></a>2.8 getDeclaredField(String)</h2><p><strong>作用</strong>：获取当前类或接口中声明的指定字段（包括 <code>private</code>、<code>protected</code> 和 <code>public</code> 字段），不包括继承自父类的字段。</p>
+<p><strong>参数</strong>：<code>name</code>：<code>String</code>，表示要获取的字段名称。</p>
+<p><strong>返回值</strong>：<code>Field</code> 对象，表示获取到的字段。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// private String myField;</span></span><br><span class="line"><span class="type">Field</span> <span class="variable">declaredField</span> <span class="operator">=</span> clazz.getDeclaredField(<span class="string">&quot;myField&quot;</span>);</span><br><span class="line">declaredField.setAccessible(<span class="literal">true</span>);  <span class="comment">// 允许访问私有字段</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-9-getDeclaredFields"><a href="#2-9-getDeclaredFields" class="headerlink" title="2.9 getDeclaredFields()"></a>2.9 getDeclaredFields()</h2><p><strong>作用</strong>：获取当前类或接口中声明的所有字段（包括 <code>private</code>、<code>protected</code> 和 <code>public</code> 字段），不包括继承自父类的字段。</p>
+<p><strong>返回值</strong>：<code>Field[]</code>，字段对象数组。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Field[] declaredFields = clazz.getDeclaredFields();</span><br><span class="line"><span class="keyword">for</span> (Field field : declaredFields) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Declared Field: &quot;</span> + field.getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-10-getMethod-String-Class…"><a href="#2-10-getMethod-String-Class…" class="headerlink" title="2.10 getMethod(String , Class&lt;?&gt;…)"></a>2.10 getMethod(String , Class&lt;?&gt;…)</h2><p><strong>作用</strong>：返回当前类及其父类中的指定 <code>public</code> 方法（包括继承的方法）。</p>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><p><code>name</code>：<code>String</code> 类型，表示要获取的方法名。</p>
+</li>
+<li><p><code>parameterTypes</code>：<code>Class&lt;?&gt;...</code>，可变长度参数，表示方法的参数类型，依次按方法签名顺序指定。如果方法没有参数，则传入空参数或忽略该参数。</p>
+</li>
+</ul>
+<p><strong>返回值</strong>：<code>Method</code> 对象，表示该方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// public void myMethod(String str, int num) &#123; ... &#125;</span></span><br><span class="line"><span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> clazz.getMethod(<span class="string">&quot;methodName&quot;</span>, String.class, <span class="type">int</span>.class);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-11-getMethods"><a href="#2-11-getMethods" class="headerlink" title="2.11 getMethods()"></a>2.11 getMethods()</h2><p><strong>作用</strong>：返回当前类及其父类中的所有 <code>public</code> 方法（包括继承的方法）。</p>
+<p><strong>返回值</strong>：<code>Method[]</code> 数组，包含所有的 <code>public</code> 方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Method[] methods = clazz.getMethods();</span><br><span class="line"><span class="keyword">for</span> (Method method : methods) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Public Method: &quot;</span> + method.getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-12-getDeclaredMethod-Stirng-Class…"><a href="#2-12-getDeclaredMethod-Stirng-Class…" class="headerlink" title="2.12 getDeclaredMethod(Stirng, Class&lt;?&gt;…)"></a>2.12 getDeclaredMethod(Stirng, Class&lt;?&gt;…)</h2><p><strong>作用</strong>：返回当前类中声明的指定方法，包括 <code>private</code> 和 <code>protected</code> 方法，但不包括父类中的方法。</p>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>name</code>：<code>String</code>，表示要获取的方法名称。</li>
+<li><code>parameterTypes</code>：<code>Class&lt;?&gt;...</code>，可变长度参数，表示方法的参数类型（按顺序）。</li>
+</ul>
+<p><strong>返回值</strong>：<code>Method</code> 对象，表示获取到的指定方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// private void myMethod(String param1, int param2) &#123; ... &#125;</span></span><br><span class="line"><span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> clazz.getDeclaredMethod(<span class="string">&quot;myMethod&quot;</span>, String.class, <span class="type">int</span>.class);</span><br><span class="line">method.setAccessible(<span class="literal">true</span>);  <span class="comment">// 允许访问私有方法</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-13-getDeclaredMethods"><a href="#2-13-getDeclaredMethods" class="headerlink" title="2.13 getDeclaredMethods()"></a>2.13 getDeclaredMethods()</h2><p><strong>作用</strong>：返回当前类中声明的所有方法（包括 <code>private</code>、<code>protected</code>、<code>public</code> 方法），不包括继承的方法。</p>
+<p><strong>返回值</strong>：<code>Method[]</code> 数组，包含类中声明的所有方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Method[] declaredMethods = clazz.getDeclaredMethods();</span><br><span class="line"><span class="keyword">for</span> (Method method : declaredMethods) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Declared Method: &quot;</span> + method.getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-14-getConstructor-Class…"><a href="#2-14-getConstructor-Class…" class="headerlink" title="2.14 getConstructor(Class&lt;?&gt;…)"></a>2.14 getConstructor(Class&lt;?&gt;…)</h2><p><strong>作用</strong>：获取当前类中 <strong>指定的 <code>public</code> 构造函数</strong>，该构造函数的参数类型与提供的 <code>parameterTypes</code> 参数匹配。</p>
+<p><strong>参数</strong>：<code>parameterTypes</code>：<code>Class&lt;?&gt;...</code>，可变长度参数，表示构造函数的参数类型（按顺序）。</p>
+<p><strong>返回值</strong>：<code>Constructor&lt;?&gt;</code> 对象，表示获取到的指定 <code>public</code> 构造函数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// public MyClass(String param) &#123; ... &#125;</span></span><br><span class="line">Constructor&lt;?&gt; constructor = clazz.getConstructor(String.class);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-15-getConstructors"><a href="#2-15-getConstructors" class="headerlink" title="2.15 getConstructors()"></a>2.15 getConstructors()</h2><p><strong>作用</strong>：返回当前类中所有的 <strong><code>public</code> 构造函数</strong>。</p>
+<p><strong>返回值</strong>：<code>Constructor&lt;?&gt;[]</code> 数组，包含类的所有 <code>public</code> 构造函数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Constructor&lt;?&gt;[] constructors = clazz.getConstructors();</span><br><span class="line"><span class="keyword">for</span> (Constructor&lt;?&gt; constructor : constructors) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Public Constructor: &quot;</span> + constructor.getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-16-getDeclaredConstructor-Calss"><a href="#2-16-getDeclaredConstructor-Calss" class="headerlink" title="2.16 getDeclaredConstructor(Calss&lt;?&gt;)"></a>2.16 getDeclaredConstructor(Calss&lt;?&gt;)</h2><p><strong>作用</strong>：获取当前类中 <strong>指定的构造函数</strong>，无论其访问修饰符（<code>public</code>、<code>private</code>、<code>protected</code>）。</p>
+<p><strong>参数</strong>：<code>parameterTypes</code>：<code>Class&lt;?&gt;...</code>，可变长度参数，表示构造函数的参数类型（按顺序）。</p>
+<p><strong>返回值</strong>：<code>Constructor&lt;?&gt;</code> 对象，表示获取到的指定构造函数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// private MyClass(String param) &#123; ... &#125;</span></span><br><span class="line">Constructor&lt;?&gt; constructor = clazz.getDeclaredConstructor(String.class);</span><br><span class="line">constructor.setAccessible(<span class="literal">true</span>);  <span class="comment">// 允许访问私有构造函数</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-17-getDeclaredConstructors"><a href="#2-17-getDeclaredConstructors" class="headerlink" title="2.17 getDeclaredConstructors()"></a>2.17 getDeclaredConstructors()</h2><p><strong>作用</strong>：返回当前类中声明的 <strong>所有构造函数</strong>，无论其访问修饰符（<code>public</code>、<code>private</code>、<code>protected</code>）。</p>
+<p><strong>返回值</strong>：<code>Constructor&lt;?&gt;[]</code> 数组，包含类中声明的所有构造函数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Constructor&lt;?&gt;[] declaredConstructors = clazz.getDeclaredConstructors();</span><br><span class="line"><span class="keyword">for</span> (Constructor&lt;?&gt; constructor : declaredConstructors) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Declared Constructor: &quot;</span> + constructor.getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上这些方法就是反射中常用到的 <code>Class</code> 类中的方法，<code>Class</code> 类还有其他方法可以自行阅读 <code>Java.lang.Class</code> 源码。</p>
+<hr>
+<h1 id="3-Field-类"><a href="#3-Field-类" class="headerlink" title="3. Field 类"></a>3. Field 类</h1><p><code>Field</code> 类是 Java 反射 API 的一部分，用于表示类或接口中的字段（属性）。它允许在运行时动态获取和操作类的属性值。</p>
+<h2 id="3-1-get-Object-obj"><a href="#3-1-get-Object-obj" class="headerlink" title="3.1 get(Object obj)"></a>3.1 get(Object obj)</h2><p><strong>作用</strong>：获取指定对象的字段值。</p>
+<p><strong>参数</strong>：<code>Object obj</code>：要从中获取字段值的对象实例。</p>
+<p><strong>返回值</strong>：返回字段的值，类型为 <code>Object</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> clazz.getField(<span class="string">&quot;fieldName&quot;</span>);</span><br><span class="line"><span class="type">Object</span> <span class="variable">value</span> <span class="operator">=</span> field.get(objectInstance);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-2-set-Object-obj-Object-value"><a href="#3-2-set-Object-obj-Object-value" class="headerlink" title="3.2 set(Object obj, Object value)"></a>3.2 set(Object obj, Object value)</h2><p><strong>作用</strong>：设置指定对象的字段值。</p>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>Object obj</code>：要设置字段值的对象实例。</li>
+<li><code>Object value</code>：要设置的字段值。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> clazz.getField(<span class="string">&quot;fieldName&quot;</span>);</span><br><span class="line">field.set(objectInstance, <span class="string">&quot;newValue&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-3-getName"><a href="#3-3-getName" class="headerlink" title="3.3 getName()"></a>3.3 getName()</h2><p><strong>作用</strong>：返回字段的名称。</p>
+<p><strong>返回值</strong>：返回字段的名称，类型为 <code>String</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">fieldName</span> <span class="operator">=</span> field.getName();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-4-getType"><a href="#3-4-getType" class="headerlink" title="3.4 getType()"></a>3.4 getType()</h2><p><strong>作用</strong>：返回字段的类型，作为 <code>Class&lt;?&gt;</code> 对象。</p>
+<p><strong>返回值</strong>：返回字段的类型，类型为 <code>Class&lt;?&gt;</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; fieldType = field.getType();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-5-setAccessible-boolean"><a href="#3-5-setAccessible-boolean" class="headerlink" title="3.5 setAccessible(boolean)"></a>3.5 setAccessible(boolean)</h2><p><strong>作用</strong>：设置字段的可访问性。<code>setAccessible(true)</code> 允许访问私有或受保护的字段。</p>
+<p><strong>参数</strong>：<code>boolean flag</code>：如果设置为 <code>true</code>，则允许访问私有字段；如果为 <code>false</code>，则禁止访问。</p>
+<blockquote>
+<p>setAccessible 方法定义在 AccessibleObject 类中，而 Field 、Constructor 、Method 类都继承了 AccessibleObject，所以它们都可以使用此方法。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">field.setAccessible(<span class="literal">true</span>);  <span class="comment">// 允许访问私有字段</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-6-getModifiers"><a href="#3-6-getModifiers" class="headerlink" title="3.6 getModifiers()"></a>3.6 getModifiers()</h2><p><strong>作用</strong>：返回字段的修饰符（如 <code>public</code>、<code>private</code>、<code>static</code> 等），作为 <code>int</code> 类型。</p>
+<p><strong>返回值</strong>：返回字段的修饰符，类型为 <code>int</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int modifiers = field.getModifiers();</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>修饰符补充：每个修饰符常量都有一个对应的整数值，使用位运算可以组合多个修饰符。如果一个字段是 <code>public static final</code>，那么 <code>getModifiers()</code> 方法返回的值是这些修饰符对应整数值的按位或（OR）结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">modifiers</span> <span class="operator">=</span> Modifier.PUBLIC | Modifier.STATIC | Modifier.FINAL; <span class="comment">// 1 | 8 | 16 = 25</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>修饰符常量</th>
+<th>整数值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Modifier.PUBLIC</code></td>
+<td>1</td>
+<td>表示字段是 <code>public</code>，对所有类可见。</td>
+</tr>
+<tr>
+<td><code>Modifier.PRIVATE</code></td>
+<td>2</td>
+<td>表示字段是 <code>private</code>，只在本类可见。</td>
+</tr>
+<tr>
+<td><code>Modifier.PROTECTED</code></td>
+<td>4</td>
+<td>表示字段是 <code>protected</code>，对同包和子类可见。</td>
+</tr>
+<tr>
+<td><code>Modifier.STATIC</code></td>
+<td>8</td>
+<td>表示字段是 <code>static</code>，属于类而非实例。</td>
+</tr>
+<tr>
+<td><code>Modifier.FINAL</code></td>
+<td>16</td>
+<td>表示字段是 <code>final</code>，其值不能被修改。</td>
+</tr>
+<tr>
+<td><code>Modifier.VOLATILE</code></td>
+<td>32</td>
+<td>表示字段是 <code>volatile</code>，用于多线程操作。</td>
+</tr>
+<tr>
+<td><code>Modifier.TRANSIENT</code></td>
+<td>64</td>
+<td>表示字段是 <code>transient</code>，在序列化时忽略。</td>
+</tr>
+<tr>
+<td><code>Modifier.SYNCHRONIZED</code></td>
+<td>128</td>
+<td>表示字段是 <code>synchronized</code>，用于线程同步。</td>
+</tr>
+</tbody></table>
+</blockquote>
+<p>以上这些方法就是反射中常用到的 <code>Field</code> 类中的方法，<code>Field</code> 类还有其他方法可以自行阅读 <code>Java.lang.reflect.Field</code> 源码。</p>
+<hr>
+<h1 id="4-Method-类"><a href="#4-Method-类" class="headerlink" title="4. Method 类"></a>4. Method 类</h1><p><code>Method</code> 类是 Java 反射 API 的一部分，用于表示类或接口中的方法。它允许在运行时动态获取和调用类的方法。</p>
+<h2 id="4-1-getName"><a href="#4-1-getName" class="headerlink" title="4.1 getName()"></a>4.1 getName()</h2><p><strong>作用</strong>：返回方法的名称。</p>
+<p><strong>返回值</strong>：返回方法的名称，类型为 <code>String</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">methodName</span> <span class="operator">=</span> method.getName();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-2-getParameterTypes"><a href="#4-2-getParameterTypes" class="headerlink" title="4.2 getParameterTypes()"></a>4.2 getParameterTypes()</h2><p><strong>作用</strong>：返回方法的参数类型数组。</p>
+<p><strong>返回值</strong>：返回一个 <code>Class&lt;?&gt;[]</code> 数组，表示方法的参数类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-3-getReturnType"><a href="#4-3-getReturnType" class="headerlink" title="4.3 getReturnType()"></a>4.3 getReturnType()</h2><p><strong>作用</strong>：返回方法的返回类型。</p>
+<p><strong>返回值</strong>：返回一个 <code>Class&lt;?&gt;</code> 对象，表示方法的返回类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; returnType = method.getReturnType();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-4-getModifiers"><a href="#4-4-getModifiers" class="headerlink" title="4.4 getModifiers()"></a>4.4 getModifiers()</h2><p><strong>作用</strong>：返回方法的修饰符（如 <code>public</code>、<code>private</code>、<code>static</code> 等），作为 <code>int</code> 类型。</p>
+<p><strong>返回值</strong>：返回方法的修饰符，类型为 <code>int</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">modifiers</span> <span class="operator">=</span> method.getModifiers();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-5-invoke-Object-obj-Object…-args"><a href="#4-5-invoke-Object-obj-Object…-args" class="headerlink" title="4.5 invoke(Object obj, Object… args)"></a>4.5 invoke(Object obj, Object… args)</h2><p><strong>作用</strong>：在指定对象上调用该方法。</p>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>Object obj</code>：要调用方法的对象实例。</li>
+<li><code>Object... args</code>：方法参数的可变数组。</li>
+</ul>
+<p><strong>返回值</strong>：返回方法的返回值，类型为 <code>Object</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> method.invoke(objectInstance, methodArgs);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-6-setAccessible-boolean-flag"><a href="#4-6-setAccessible-boolean-flag" class="headerlink" title="4.6 setAccessible(boolean flag)"></a>4.6 setAccessible(boolean flag)</h2><ul>
+<li><strong>作用</strong>：设置方法的可访问性。通过 <code>setAccessible(true)</code> 可以访问私有或受保护的方法。</li>
+<li><strong>参数</strong>：<code>boolean flag</code>：如果设置为 <code>true</code>，则允许访问私有方法；如果为 <code>false</code>，则禁止访问。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">method.setAccessible(<span class="literal">true</span>);  <span class="comment">// 允许访问私有方法</span></span><br></pre></td></tr></table></figure>
+
+<p>以上这些方法就是反射中常用到的 <code>Method</code> 类中的方法，<code>Method</code> 类还有其他方法可以自行阅读 <code>Java.lang.reflect.Method</code> 源码。</p>
+<hr>
+<h1 id="5-Constructor-类"><a href="#5-Constructor-类" class="headerlink" title="5. Constructor 类"></a>5. Constructor 类</h1><p><code>Constructor</code> 类是 Java 反射 API 的一部分，表示类的构造方法。它允许我们在运行时动态获取构造方法的信息，并可以通过它来实例化对象，即便是在不知道类名或构造参数的情况下。</p>
+<h2 id="5-1-newInstance-Object…-initargs"><a href="#5-1-newInstance-Object…-initargs" class="headerlink" title="5.1 newInstance(Object… initargs)"></a>5.1 newInstance(Object… initargs)</h2><p><strong>作用</strong>：通过反射创建一个新对象实例。</p>
+<p><strong>参数</strong>：<code>Object... initargs</code>，构造方法所需的参数列表。</p>
+<p><strong>返回值</strong>：返回新创建的对象，类型为 <code>Object</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Constructor&lt;?&gt; constructor = clazz.getConstructor(String.class, <span class="type">int</span>.class);</span><br><span class="line"><span class="type">Object</span> <span class="variable">instance</span> <span class="operator">=</span> constructor.newInstance(<span class="string">&quot;John&quot;</span>, <span class="number">25</span>);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-2-getModifiers"><a href="#5-2-getModifiers" class="headerlink" title="5.2 getModifiers()"></a>5.2 getModifiers()</h2><ul>
+<li><strong>作用</strong>：返回构造方法的修饰符，以 <code>int</code> 类型的位掩码表示。</li>
+<li><strong>返回值</strong>：返回构造方法的修饰符，类型为 <code>int</code>。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">modifiers</span> <span class="operator">=</span> constructor.getModifiers();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-3-getParameterTypes"><a href="#5-3-getParameterTypes" class="headerlink" title="5.3 getParameterTypes()"></a>5.3 getParameterTypes()</h2><p><strong>作用</strong>：返回构造方法的参数类型数组。</p>
+<p><strong>返回值</strong>：返回一个 <code>Class&lt;?&gt;[]</code> 数组，表示构造方法的参数类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt;[] paramTypes = constructor.getParameterTypes();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-4-setAccessible-boolean-flag"><a href="#5-4-setAccessible-boolean-flag" class="headerlink" title="5.4 setAccessible(boolean flag)"></a>5.4 <strong><code>setAccessible(boolean flag)</code></strong></h2><p><strong>作用</strong>：设置构造方法的可访问性。通过 <code>setAccessible(true)</code> 可以访问私有或受保护的构造方法。</p>
+<p><strong>参数</strong>：<code>boolean flag</code>，如果设置为 <code>true</code>，允许访问私有构造方法；否则恢复默认访问控制。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">constructor.setAccessible(<span class="literal">true</span>);  <span class="comment">// 允许访问构造方法</span></span><br></pre></td></tr></table></figure>
+
+<p>以上这些方法就是反射中常用到的 <code>Constructor</code> 类中的方法，<code>Constructor</code> 类还有其他方法可以自行阅读 <code>Java.lang.reflect.Constructor</code> 源码。</p>
+<hr>
+<h1 id="6-演示反射基本操作"><a href="#6-演示反射基本操作" class="headerlink" title="6. 演示反射基本操作"></a>6. 演示反射基本操作</h1><p>通过反射创建对象、获取和调用类的方法、访问类的字段。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Employee</span> &#123;</span><br><span class="line">    <span class="comment">// 私有字段</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> salary;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 公有构造方法</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Employee</span><span class="params">(String name, <span class="type">double</span> salary)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.salary = salary;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 私有构造方法</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Employee</span><span class="params">(String name, <span class="type">double</span> salary, <span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.salary = salary;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 公有方法</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">raiseSalary</span><span class="params">(<span class="type">double</span> percentage)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.salary += <span class="built_in">this</span>.salary * percentage / <span class="number">100</span>;</span><br><span class="line">        System.out.println(name + <span class="string">&quot;&#x27;s new salary: &quot;</span> + salary);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 私有方法</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">displayAge</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(name + <span class="string">&quot; is &quot;</span> + age + <span class="string">&quot; years old.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Employee&#123;name=&#x27;&quot;</span> + name + <span class="string">&quot;&#x27;, salary=&quot;</span> + salary + <span class="string">&quot;, age=&quot;</span> + age + <span class="string">&quot;&#125;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.b1ng0ooo.reflect.Employee;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ComplexReflectionExample</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 1. 获取类对象</span></span><br><span class="line">        Class&lt;?&gt; employeeClass = Class.forName(<span class="string">&quot;Employee&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 获取并调用公有构造方法，创建实例</span></span><br><span class="line">        Constructor&lt;?&gt; publicConstructor = employeeClass.getConstructor(String.class, <span class="type">double</span>.class);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">employeeInstance</span> <span class="operator">=</span> publicConstructor.newInstance(<span class="string">&quot;xiaohong&quot;</span>, <span class="number">50000.0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 获取并调用私有构造方法，创建实例</span></span><br><span class="line">        Constructor&lt;?&gt; privateConstructor = employeeClass.getDeclaredConstructor(String.class, <span class="type">double</span>.class, <span class="type">int</span>.class);</span><br><span class="line">        privateConstructor.setAccessible(<span class="literal">true</span>);  <span class="comment">// 允许访问私有构造方法</span></span><br><span class="line">        <span class="type">Object</span> <span class="variable">employeeInstance2</span> <span class="operator">=</span> privateConstructor.newInstance(<span class="string">&quot;xiaoming&quot;</span>, <span class="number">60000.0</span>, <span class="number">30</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 获取并调用公有方法</span></span><br><span class="line">        <span class="type">Method</span> <span class="variable">raiseSalaryMethod</span> <span class="operator">=</span> employeeClass.getMethod(<span class="string">&quot;raiseSalary&quot;</span>, <span class="type">double</span>.class);</span><br><span class="line">        raiseSalaryMethod.invoke(employeeInstance, <span class="number">10.0</span>);  <span class="comment">// xiaohong 的工资加了 10%</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5. 访问私有字段并修改</span></span><br><span class="line">        <span class="type">Field</span> <span class="variable">nameField</span> <span class="operator">=</span> employeeClass.getDeclaredField(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">        nameField.setAccessible(<span class="literal">true</span>);  <span class="comment">// 允许访问私有字段</span></span><br><span class="line">        nameField.set(employeeInstance, <span class="string">&quot;xiaohong&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">Field</span> <span class="variable">salaryField</span> <span class="operator">=</span> employeeClass.getDeclaredField(<span class="string">&quot;salary&quot;</span>);</span><br><span class="line">        salaryField.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        salaryField.set(employeeInstance, <span class="number">55000.0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 6. 调用私有方法</span></span><br><span class="line">        <span class="type">Method</span> <span class="variable">privateMethod</span> <span class="operator">=</span> employeeClass.getDeclaredMethod(<span class="string">&quot;displayAge&quot;</span>);</span><br><span class="line">        privateMethod.setAccessible(<span class="literal">true</span>);  <span class="comment">// 允许访问私有方法</span></span><br><span class="line">        privateMethod.invoke(employeeInstance2);  <span class="comment">// 输出 xiaoming 的年龄</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 7. 打印修改后的对象</span></span><br><span class="line">        System.out.println(employeeInstance);   <span class="comment">// 输出修改后的 xiaohong 的信息</span></span><br><span class="line">        System.out.println(employeeInstance2);  <span class="comment">// 输出 xiaoming 的信息</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">xiaohong&#x27;s new salary: 55000.0</span><br><span class="line">xiaoming is 30 years old.</span><br><span class="line">Employee&#123;name=&#x27;xiaohong&#x27;, salary=55000.0, age=0&#125;</span><br><span class="line">Employee&#123;name=&#x27;xiaoming&#x27;, salary=60000.0, age=30&#125;</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/10/10/Java%20IO%20Stream/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2024-10-15 17:40:50
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Java/" title="Java">
+                        #Java
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/10/13/Java%20Proxy%20Pattern/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%8F%8D%E5%B0%84"><span class="toc-text">1. 反射</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%8D%E5%B0%84%EF%BC%9F"><span class="toc-text">1.1 什么是反射？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E5%B8%B8%E7%94%A8%E7%9A%84%E5%8F%8D%E5%B0%84%E7%9B%B8%E5%85%B3%E7%B1%BB%E5%92%8C%E6%96%B9%E6%B3%95"><span class="toc-text">1.2 常用的反射相关类和方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Class-%E7%B1%BB"><span class="toc-text">2. Class 类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-forName-String"><span class="toc-text">2.1 forName(String)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-newInstance"><span class="toc-text">2.2 newInstance()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-getName"><span class="toc-text">2.3 getName()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-getInterfaces"><span class="toc-text">2.4 getInterfaces()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-getSuperClass"><span class="toc-text">2.5 getSuperClass()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-getField-String"><span class="toc-text">2.6 getField(String)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-getFields"><span class="toc-text">2.7 getFields()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-getDeclaredField-String"><span class="toc-text">2.8 getDeclaredField(String)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-9-getDeclaredFields"><span class="toc-text">2.9 getDeclaredFields()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-10-getMethod-String-Class%E2%80%A6"><span class="toc-text">2.10 getMethod(String , Class&lt;?&gt;…)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-11-getMethods"><span class="toc-text">2.11 getMethods()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-12-getDeclaredMethod-Stirng-Class%E2%80%A6"><span class="toc-text">2.12 getDeclaredMethod(Stirng, Class&lt;?&gt;…)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-13-getDeclaredMethods"><span class="toc-text">2.13 getDeclaredMethods()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-14-getConstructor-Class%E2%80%A6"><span class="toc-text">2.14 getConstructor(Class&lt;?&gt;…)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-15-getConstructors"><span class="toc-text">2.15 getConstructors()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-16-getDeclaredConstructor-Calss"><span class="toc-text">2.16 getDeclaredConstructor(Calss&lt;?&gt;)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-17-getDeclaredConstructors"><span class="toc-text">2.17 getDeclaredConstructors()</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Field-%E7%B1%BB"><span class="toc-text">3. Field 类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-get-Object-obj"><span class="toc-text">3.1 get(Object obj)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-set-Object-obj-Object-value"><span class="toc-text">3.2 set(Object obj, Object value)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-getName"><span class="toc-text">3.3 getName()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-getType"><span class="toc-text">3.4 getType()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-setAccessible-boolean"><span class="toc-text">3.5 setAccessible(boolean)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-6-getModifiers"><span class="toc-text">3.6 getModifiers()</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Method-%E7%B1%BB"><span class="toc-text">4. Method 类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-getName"><span class="toc-text">4.1 getName()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-getParameterTypes"><span class="toc-text">4.2 getParameterTypes()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-getReturnType"><span class="toc-text">4.3 getReturnType()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-getModifiers"><span class="toc-text">4.4 getModifiers()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-invoke-Object-obj-Object%E2%80%A6-args"><span class="toc-text">4.5 invoke(Object obj, Object… args)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-6-setAccessible-boolean-flag"><span class="toc-text">4.6 setAccessible(boolean flag)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Constructor-%E7%B1%BB"><span class="toc-text">5. Constructor 类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-newInstance-Object%E2%80%A6-initargs"><span class="toc-text">5.1 newInstance(Object… initargs)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-getModifiers"><span class="toc-text">5.2 getModifiers()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-getParameterTypes"><span class="toc-text">5.3 getParameterTypes()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-setAccessible-boolean-flag"><span class="toc-text">5.4 setAccessible(boolean flag)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-%E6%BC%94%E7%A4%BA%E5%8F%8D%E5%B0%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-text">6. 演示反射基本操作</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2024 Oranges</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Java%20Reflection + '&url=' + https%3A%2F%2Fb1ng0ooo.github.io%2F2024%2F10%2F11%2FJava%2520Reflection%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://b1ng0ooo.github.io/2024/10/11/Java%20Reflection/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
