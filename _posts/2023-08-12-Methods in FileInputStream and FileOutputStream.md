@@ -1,7 +1,7 @@
 ---
 title: Methods in FileInputStream and FileOutputStream
 date: 2023-08-12 09:50:36 +0800
-categories: [Java Basic, I/O Stream]
+categories: [Java Basics, I/O Stream]
 tags: [Java]
 author: <author_id>
 description: The FileOutputStream class and the FileInputStream class are stream classes used for file input and output in Java. They provide various methods for reading and writing byte data in files.
@@ -23,7 +23,7 @@ keep hungry! keep foolish!
 
 
 
-### int read()
+### 1. int read()
 
 **Function**: Read a byte (8 bits) from the input stream. This method blocks if no input is yet available.
 
@@ -56,7 +56,7 @@ keep hungry! keep foolish!
 
 
 
-### int read(byte[] b)
+### 2. int read(byte[] b)
 
 **Function**: Reads up to `b.length` bytes of data from this input stream into an array of bytes. This method blocks until some input is available.
 
@@ -92,7 +92,7 @@ keep hungry! keep foolish!
 
 
 
-### int read(byte[] b, int off, int len)
+### 3. int read(byte[] b, int off, int len)3
 
 **Function**: Reads up to `len` bytes of data from this input stream into an array of bytes. If `len` is not zero, the method blocks until some input is available; otherwise, no bytes are read and `0` is returned.
 
@@ -142,7 +142,7 @@ keep hungry! keep foolish!
 
 ## Methods in FileOutputStream
 
-### void write(int b)
+### 1. void write(int b)
 
 **Function**: Writes the specified byte to this file output stream. This method writes the specified integer b as a byte, but actually writes only the lower 8 bits of the integer, i.e., the lowest byte of b.
 
@@ -170,7 +170,7 @@ A
 
 
 
-### void write(byte[] b)
+### 2. void write(byte[] b)
 
 **Function**: Writes `b.length` bytes from the specified byte array to this file output stream.
 
@@ -199,7 +199,7 @@ Hello World
 
 
 
-### void wirte(byte[] b, int off, int len)
+### 3. void wirte(byte[] b, int off, int len)
 
 **Function**: Writes `len` bytes from the specified byte array starting at offset `off` to this file output stream.
 

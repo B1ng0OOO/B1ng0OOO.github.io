@@ -1,7 +1,7 @@
 ---
 title: Analyzing the FileReader and FileWriter
 date: 2023-08-12 15:00:43 +0800
-categories: [Java Basic,I/O Stream]
+categories: [Java Basics,I/O Stream]
 tags: [Java]
 author: <author_id>
 description: The FileReader class and the FileWriter class are file reading and writing classes for character streams in Java. They specialize in processing text data (characters) rather than byte streams, and are suitable for processing files containing character data (such as .txt files).

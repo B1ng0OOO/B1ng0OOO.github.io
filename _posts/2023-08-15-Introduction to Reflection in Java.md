@@ -1,7 +1,7 @@
 ---
 title: Introduction to Reflection in Java
 date: 2023-08-15 10:37:06 +0800
-categories: [Java Basic, Reflection]
+categories: [Java Basics, Reflection]
 tags: [Java]
 author: <author_id>
 description: Java Reflection is a powerful feature in Java that allows us to inspect and manipulate classes, methods, fields, and constructors at runtime, even if we don’t know their names or types at compile time. The reflection API is part of the java.lang.reflect package and provides a way to dynamically access and modify program elements.Additionally, we can instantiate new objects, invoke methods and get or set field values using reflection.
@@ -78,7 +78,7 @@ Class<MyClass> clazz = MyClass.class;
 
 ## Methods in Class
 
-### Class<?> forName(String className)
+### 1. Class<?> forName(String className)
 
 **Function**: Load the corresponding Class object according to the fully qualified name (including Package Name) of the specified class.
 
@@ -93,7 +93,7 @@ Class<?> clazz = Class.forName("com.b1ng0ooo.reflection.MyClass");
 
 
 
-### T newInstance()
+### 2. T newInstance()
 
 **Function**: Creates a new instance of the class represented by this `Class` object.
 
@@ -106,7 +106,7 @@ Object obj = clazz.newInstance();
 
 
 
-### String getName()
+### 3. String getName()
 
 **Function**: Returns the name of the entity (class, interface, array class, primitive type, or void) represented by this `Class` object, as a `String`.
 
@@ -119,7 +119,7 @@ String className = clazz.getName();
 
 
 
-### Class<?>[] getInterfaces()
+### 4. Class<?>[] getInterfaces()
 
 **Function**: Determines the interfaces implemented by the class or interface represented by this object.
 
@@ -132,7 +132,7 @@ Class<?>[] interfaces = clazz.getInterfaces();
 
 
 
-### Class<? super T> getSuperclass()
+### 5. Class<? super T> getSuperclass()
 
 **Function**: Returns the `Class` representing the superclass of the entity (class, interface, primitive type or void) represented by this `Class`. If this `Class` represents either the `Object` class, an interface, a primitive type, or void, then null is returned. If this object represents an array class then the `Class` object representing the `Object` class is returned.
 
@@ -145,7 +145,7 @@ Class<?> superClass = clazz.getSuperclass();
 
 
 
-### Field getField(String name)
+### 6. Field getField(String name)
 
 **Function**: Returns a `Field` object that reflects the specified public member field of the class or interface represented by this `Class` object. The `name` parameter is a `String` specifying the simple name of the desired field.
 
@@ -160,7 +160,7 @@ Field field = clazz.getField("string1");
 
 
 
-### Field[] getFields()
+### 7. Field[] getFields()
 
 **Function**: Returns an array containing `Field` objects reflecting all the accessible public fields of the class or interface represented by this `Class` object.
 
@@ -173,7 +173,7 @@ Field[] fields = clazz.getFields();
 
 
 
-### Field getDeclaredField(String name)
+### 8. Field getDeclaredField(String name)
 
 **Function**: Returns a `Field` object that reflects the specified declared field of the class or interface represented by this `Class` object. The `name` parameter is a `String` that specifies the simple name of the desired field.
 
@@ -191,7 +191,7 @@ declaredField.setAccessible(true);
 
 
 
-### Field[] getDeclaredFields()
+### 9. Field[] getDeclaredFields()
 
 **Function**: Returns an array of `Field` objects reflecting all the fields declared by the class or interface represented by this `Class` object. This includes public, protected, default (package) access, and private fields, but excludes inherited fields.
 
@@ -207,7 +207,7 @@ for (Field field : declaredFields) {
 
 
 
-### Method getMethod(String name, Class<?>... parameterTypes)
+### 10. Method getMethod(String name, Class<?>... parameterTypes)
 
 **Function**: Returns a Method object that reflects the specified public member method of the class or interface represented by this Class object.
 
@@ -225,7 +225,7 @@ Method method = clazz.getMethod("methodName", String.class, int.class);
 
 
 
-### Method[] getMethods()
+### 11. Method[] getMethods()
 
 **Function**: Returns an array containing `Method` objects reflecting all the public methods of the class or interface represented by this `Class` object, including those declared by the class or interface and those inherited from superclasses and superinterfaces.
 
@@ -241,7 +241,7 @@ for (Method method : methods) {
 
 
 
-### Method getDeclaredMethod(String name, Class<?>... parameterTypes)
+### 12. Method getDeclaredMethod(String name, Class<?>... parameterTypes)
 
 **Function**: Returns a `Method` object that reflects the specified declared method of the class or interface represented by this `Class` object.
 
@@ -261,7 +261,7 @@ method.setAccessible(true);
 
 
 
-### Method[] getDeclaredMethods()
+### 13. Method[] getDeclaredMethods()
 
 **Function**: Returns an array containing `Method` objects reflecting all the declared methods of the class or interface represented by this `Class` object, including public, protected, default (package) access, and private methods, but excluding inherited methods.
 
@@ -277,7 +277,7 @@ for (Method method : declaredMethods) {
 
 
 
-### Constructor\<T\> getConstructor(Class<?>... parameterTypes)
+### 14. Constructor\<T\> getConstructor(Class<?>... parameterTypes)
 
 **Function**: Returns a `Constructor` object that reflects the specified public constructor of the class represented by this `Class` object.
 
@@ -293,7 +293,7 @@ Constructor<?> constructor = clazz.getConstructor(String.class);
 
 
 
-### Constructor<?>[] getDeclaredConstructors()
+### 15. Constructor<?>[] getDeclaredConstructors()
 
 **Function**: Returns an array of `Constructor` objects reflecting all the constructors declared by the class represented by this `Class` object.
 
@@ -309,7 +309,7 @@ for (Constructor<?> constructor : constructors) {
 
 
 
-### Constructor\<T\> getDeclaredConstructor(Class<?>... parameterTypes)
+### 16. Constructor\<T\> getDeclaredConstructor(Class<?>... parameterTypes)
 
 **Function**: Returns a `Constructor` object that reflects the specified constructor of the class or interface represented by this `Class` object.
 
@@ -326,7 +326,7 @@ constructor.setAccessible(true);
 
 
 
-### Constructor<?>[] getDeclaredConstructors()
+### 17. Constructor<?>[] getDeclaredConstructors()
 
 **Function**: Returns an array of `Constructor` objects reflecting all the constructors declared by the class represented by this `Class` object. These are public, protected, default (package) access, and private constructors. The elements in the array returned are not sorted and are not in any particular order. If the class has a default constructor, it is included in the returned array. This method returns an array of length 0 if this `Class` object represents an interface, a primitive type, an array class, or void.
 
@@ -348,7 +348,7 @@ The above methods are the methods in the `Class` class that are commonly used in
 
 The `Field` class is part of the Java reflection API and is used to represent fields in a class or interface. It allows the attribute values of a class to be dynamically obtained and manipulated at runtime.
 
-### Object get(Object obj)
+### 1. Object get(Object obj)
 
 **Function**: Returns the value of the field represented by this `Field`, on the specified object. The value is automatically wrapped in an object if it has a primitive type.
 
@@ -364,7 +364,7 @@ Object value = field.get(objectInstance);
 
 
 
-### void set(Object obj, Object value)
+### 2. void set(Object obj, Object value)
 
 **Function**: Sets the field represented by this `Field` object on the specified object argument to the specified new value. The new value is automatically unwrapped if the underlying field has a primitive type.
 
@@ -381,7 +381,7 @@ field.set(objectInstance, "newValue");
 
 
 
-### String getName()
+### 3. String getName()
 
 **Function**: Returns the name of the field represented by this `Field` object.
 
@@ -394,7 +394,7 @@ String fieldName = field.getName();
 
 
 
-### Class<?> getType()
+### 4. Class<?> getType()
 
 **Function**: Returns a `Class` object that identifies the declared type for the field represented by this `Field` object.
 
@@ -407,7 +407,7 @@ Class<?> fieldType = field.getType();
 
 
 
-### void setAccessible(boolean flag)
+### 5. void setAccessible(boolean flag)
 
 **Function**: Set the `accessible` flag for this object to the indicated boolean value. A value of `true` indicates that the reflected object should suppress Java language access checking when it is used. A value of `false` indicates that the reflected object should enforce Java language access checks.
 
@@ -422,7 +422,7 @@ field.setAccessible(true);
 
 
 
-### int getModifiers()
+### 6. int getModifiers()
 
 **Function**: Returns the Java language modifiers for the field represented by this `Field` object, as an integer. The `Modifier` class should be used to decode the modifiers.
 
@@ -457,7 +457,7 @@ The above methods are the methods in the `Field` class that are commonly used in
 
 The `Method` class is part of the Java reflection API and is used to represent methods in a class or interface. It allows methods of a class to be obtained and called dynamically at runtime.
 
-### String getName()
+### 1. String getName()
 
 **Function**: Returns the name of the method represented by this `Method` object, as a `String`.
 
@@ -470,7 +470,7 @@ String methodName = method.getName();
 
 
 
-### Class<?>[] getParameterTypes()
+### 2. Class<?>[] getParameterTypes()
 
 **Function**: Returns an array of `Class` objects that represent the formal parameter types, in declaration order, of the executable represented by this object. Returns an array of length 0 if the underlying executable takes no parameters.
 
@@ -483,7 +483,7 @@ Class<?>[] parameterTypes = method.getParameterTypes();
 
 
 
-### Class<?> getReturnType()
+### 3. Class<?> getReturnType()
 
 **Function**: Returns a `Class` object that represents the formal return type of the method represented by this `Method` object.
 
@@ -496,7 +496,7 @@ Class<?> returnType = method.getReturnType();
 
 
 
-### Object invoke(Object obj, Object... args)
+### 4. Object invoke(Object obj, Object... args)
 
 **Function**: Invokes the underlying method represented by this `Method` object, on the specified object with the specified parameters. Individual parameters are automatically unwrapped to match primitive formal parameters, and both primitive and reference parameters are subject to method invocation conversions as necessary.
 
@@ -520,7 +520,7 @@ The above methods are the methods in the `Method` class that are commonly used i
 
 The `Constructor` class is part of the Java reflection API and represents the constructor of a class. It allows us to dynamically obtain information about the constructor at runtime and use it to instantiate objects even without knowing the class name or construction parameters.
 
-### T newInstance(Object... initargs)
+### 1. T newInstance(Object... initargs)
 
 **Function**: Uses the constructor represented by this `Constructor` object to create and initialize a new instance of the constructor's declaring class, with the specified initialization parameters. Individual parameters are automatically unwrapped to match primitive formal parameters, and both primitive and reference parameters are subject to method invocation conversions as necessary.
 
@@ -536,7 +536,7 @@ Object instance = constructor.newInstance("John", 25);
 
 
 
-### Class<?>[] getParameterTypes()
+### 2. Class<?>[] getParameterTypes()
 
 **Function**: Returns an array of `Class` objects that represent the formal parameter types, in declaration order, of the executable represented by this object. Returns an array of length 0 if the underlying executable takes no parameters.
 

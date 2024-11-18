@@ -1,7 +1,7 @@
 ---
 title: Introduction to I/O Streams in Java
 date: 2023-08-12 08:30:36 +0800
-categories: [Java Basic, I/O Stream]
+categories: [Java Basics, I/O Stream]
 tags: [Java]
 author: <author_id>
 description: In Java, I/O Streams (Input/Output Streams) are one of the basic tools for processing data reading and writing. Whether reading data from a file, sending a request to the network, or getting input from the console, I/O Streams are the core way that Java programs interact with external data sources.
