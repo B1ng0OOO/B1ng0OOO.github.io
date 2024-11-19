@@ -684,7 +684,7 @@ public class KryoDemo {
 
 **Output**:
 
-```makefile
+```
 User{name='B1ng0OOO', age=18}
 ```
 {: .nolineno}
@@ -801,7 +801,7 @@ public class HessianDemo {
 ```
 {: .nolineno}
 
-```makefile
+```
 User{name='B1ng0OOO', age=18}
 ```
 {: .nolineno}

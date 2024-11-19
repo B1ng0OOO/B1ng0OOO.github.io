@@ -642,7 +642,7 @@ public class ComplexReflectionExample {
 ```
 {: .nolineno}
 
-```makefile
+```
 B1ng0OOO's new salary: 55000.0
 Google is 30 years old.
 Employee{name='B1ng0OOO', salary=55000.0, age=0}
