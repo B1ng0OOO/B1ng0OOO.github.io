@@ -1,7 +1,7 @@
 ---
 title: Proxy Pattern in Java
 date: 2023-08-19 14:13:29 +0800
-categories: [Java Basics, Dynamic Proxy]
+categories: [Java Basics, Proxy Pattern]
 tags: [Java]
 author: <author_id>
 description: Dynamic Proxy in Java is a powerful mechanism that allows the creation of proxy instances for interfaces at runtime. This is commonly used for implementing cross-cutting concerns like logging, security, and transaction management without modifying the original code.
