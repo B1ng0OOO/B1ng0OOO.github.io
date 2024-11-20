@@ -1,7 +1,7 @@
 ---
 title: Class Loaders in Java
 date: 2023-08-25 08:11:12 +0800
-categories: [Java Basics, Dynamic Proxy]
+categories: [Java Basics, ClassLoaders]
 tags: [Java]
 author: <author_id>
 description: The Java ClassLoader is an integral part of the Java Runtime Environment (JRE) that dynamically loads Java classes into the Java Virtual Machine (JVM). The Java run time system does not need to know about files and file systems because of classloaders. Java classes aren’t loaded into memory all at once, but when required by an application. At this point, the Java ClassLoader is called by the JRE, and these ClassLoaders load classes into memory dynamically.ClassLoaders play a crucial role in Java’s ability to dynamically load classes into memory as needed, enabling flexibility and efficiency in Java applications.
