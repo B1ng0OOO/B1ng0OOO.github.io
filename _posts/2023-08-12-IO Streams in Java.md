@@ -1,5 +1,5 @@
 ---
-title: Introduction to I/O Streams in Java
+title: I/O Streams in Java
 date: 2023-08-12 08:30:36 +0800
 categories: [Java Basics, I/O Stream]
 tags: [Java]

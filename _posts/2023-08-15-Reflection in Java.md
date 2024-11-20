@@ -1,5 +1,5 @@
 ---
-title: Introduction to Reflection in Java
+title: Reflection in Java
 date: 2023-08-15 10:37:06 +0800
 categories: [Java Basics, Reflection]
 tags: [Java]
