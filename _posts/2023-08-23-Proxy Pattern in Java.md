@@ -1,6 +1,6 @@
 ---
 title: Proxy Pattern in Java
-date: 2023-08-19 14:13:29 +0800
+date: 2023-08-23 11:43:09 +0800
 categories: [Java Basics, Proxy Pattern]
 tags: [Java]
 author: <author_id>

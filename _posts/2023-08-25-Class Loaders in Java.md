@@ -138,6 +138,7 @@ This phase transforms the class bytecode into a form directly usable by the JVM.
     ```java
     static int counter = 100;  // Value assigned in initialization, not here
     ```
+    {: .nolineno}
   
 - **Resolution**:
 
@@ -228,6 +229,7 @@ A **class loader** is a Java component that dynamically loads `.class` files int
       }
   }
   ```
+  {: .nolineno}
 
 
 
@@ -255,6 +257,7 @@ This mechanism ensures **security and consistency** by preventing custom class l
 ```java
 Person person = new Person();  // Loading the Person class
 ```
+{: .nolineno}
 
 1. The **Application ClassLoader** (child) receives the request to load `Person`.
 
@@ -309,6 +312,8 @@ public class String {
     }
 }
 ```
+{: .nolineno}
+
 
 Without the delegation model, the JVM might load this fake `String` class instead of the legitimate one from the core libraries, causing severe security and stability issues. The delegation model ensures the **Bootstrap ClassLoader** always loads core classes first, avoiding such conflicts.
 
@@ -341,12 +346,14 @@ public class Main {
     }
 }
 ```
+{: .nolineno}
 
 If the JVM didn't enforce the delegation model, this fake `String` class might be loaded instead of the core library version, leading to:
 
 ```
 Output: This is not the real String class!
 ```
+{: .nolineno}
 
 However, thanks to the Parent Delegation Model, the `Bootstrap ClassLoader` ensures that the legitimate `java.lang.String` from the core libraries is always loaded first, preventing such problems.
 
@@ -364,6 +371,7 @@ public class Main {
     }
 }
 ```
+{: .nolineno}
 
 Set a breakpoint at `Class<?> person = classLoader.loadClass("Person");` to start debugging.
 
@@ -401,6 +409,7 @@ At the beginning of the method, a temporary elevation of privileges is performed
 String path = name.replace('.', '/').concat(".class");  // path = "Person.class"
 Resource res = ucp.getResource(path, false);
 ```
+{: .nolineno}
 
 Here, the class name is converted into a path format, and then the program uses `ucp`, which is an instance of `URLClassPath`, to look up the corresponding `.class` file. This returns a `Resource` object, where `res.url` is the path of the `Person` class.
 
@@ -423,12 +432,14 @@ The inheritance hierarchy of the required classes during the class loading proce
 ```
 ClassLoader -> SecureClassLoader -> URLClassLoader -> ExtClassLoader & AppClassLoader
 ```
+{: .nolineno}
 
 From the perspective of understanding the mechanism, the key methods to observe are actually three main methods:
 
 ```
 loadClass() -> findClass() -> defineClass()
 ```
+{: .nolineno}
 
 - `loadClass()`: Used to load a class and return a `Class` object.
 - `findClass()`: Used to locate the class's bytecode.
