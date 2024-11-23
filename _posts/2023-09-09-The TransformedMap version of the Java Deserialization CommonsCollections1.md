@@ -236,7 +236,6 @@ Back to the `transform(Object input)` method, right-click the method name and se
 protected Object checkSetValue(Object value) {
     return valueTransformer.transform(value);
 }
-
 ```
 {: .nolineno file="org.apache.commons.collections.map.TransformedMap"}
 
