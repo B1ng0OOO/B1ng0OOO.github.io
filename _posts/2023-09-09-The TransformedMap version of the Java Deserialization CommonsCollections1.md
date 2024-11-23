@@ -236,7 +236,11 @@ Back to the `transform(Object input)` method, right-click the method name and se
 protected Object checkSetValue(Object value) {
     return valueTransformer.transform(value);
 }
+
 ```
+{: .nolineno file="org.apache.commons.collections.map.TransformedMap"}
+
+
 
 This method returns and calls the `transform(Object input)` method of the `valueTransformer` member variable, which implements the `Transformer` interface. Since the value of `valueTransformer` is controllable when creating an instance of the `TransformedMap` class, we can assign it the `InvokerTransformer` object `exec` mentioned earlier. Then, using the `checkSetValue(Object value)` method obtained via reflection, we can invoke `exec.transform(Object input)`.
 
